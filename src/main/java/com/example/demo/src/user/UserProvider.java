@@ -52,7 +52,7 @@ public class UserProvider {
                     }
 
 
-    public GetUserRes getUser(int userIdx) throws BaseException {
+    public GetUserRes getUser(Long userIdx) throws BaseException {
         try {
             GetUserRes getUserRes = userDao.getUser(userIdx);
             return getUserRes;
@@ -79,7 +79,7 @@ public class UserProvider {
         }
 
         if(user.getUserPassword().equals(encryptPwd)){
-            int userIdx = user.getUserId();
+            Long userIdxIdx = user.getUserId();
             String jwt = jwtService.createJwt(userIdx);
             return new PostLoginRes(userIdx,jwt);
         }

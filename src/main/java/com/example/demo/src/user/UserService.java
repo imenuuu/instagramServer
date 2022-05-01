@@ -48,7 +48,7 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            int userIdx = userDao.createUser(postUserReq);
+            Long userIdx = userDao.createUser(postUserReq);
             //jwt 발급.
             String jwt = jwtService.createJwt(userIdx);
             return new PostUserRes(jwt,userIdx);

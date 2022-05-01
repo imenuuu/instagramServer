@@ -28,7 +28,9 @@ public enum BaseResponseStatus {
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
-    POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
+    POST_USERS_EMPTY_NICKNAME(false,2020,"닉네임을 입력해주세요"),
+    POST_USERS_EMPTY_PHONE_NUMBER(false,2030,"휴대폰 번호를 입력해주세요"),
+    POST_USERS_INVALID_PHONE_NUMBER(false,2031,"휴대폰형식과 맞지않음"),
 
 
 
@@ -39,6 +41,7 @@ public enum BaseResponseStatus {
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
 
     // [POST] /users
+    POST_USERS_EXISTS_NICKNAME(false,3011,"이미 존재하는 아이디입니다."),
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
 

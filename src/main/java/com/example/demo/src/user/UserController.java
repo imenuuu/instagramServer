@@ -68,7 +68,7 @@ public class UserController {
     // Path-variable
     @ResponseBody
     @GetMapping("/{userIdx}") // (GET) 127.0.0.1:9000/app/users/:userIdx
-    public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") int userIdx) {
+    public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") Long userIdx) {
         // Get Users
         try{
             GetUserRes getUserRes = userProvider.getUser(userIdx);
@@ -129,7 +129,7 @@ public class UserController {
      */
     @ResponseBody
     @PatchMapping("/{userIdx}")
-    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody User user){
+    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") Long userIdx, @RequestBody User user){
         try {
             //jwt에서 idx 추출.
             int userIdxByJwt = jwtService.getUserIdx();
@@ -142,7 +142,7 @@ public class UserController {
             userService.modifyUserName(patchUserReq);
 
             String result = "";
-        return new BaseResponse<>(result);
+            return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
