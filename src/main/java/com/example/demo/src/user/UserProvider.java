@@ -68,7 +68,7 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-
+/*
     public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException{
         User user = userDao.getPwd(postLoginReq);
         String encryptPwd;
@@ -78,8 +78,8 @@ public class UserProvider {
             throw new BaseException(PASSWORD_DECRYPTION_ERROR);
         }
 
-        if(user.getPassword().equals(encryptPwd)){
-            int userIdx = user.getUserIdx();
+        if(user.getUserPassword().equals(encryptPwd)){
+            int userIdx = user.getUserId();
             String jwt = jwtService.createJwt(userIdx);
             return new PostLoginRes(userIdx,jwt);
         }
@@ -87,6 +87,6 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_LOGIN);
         }
 
-    }
+    }*/
 
 }

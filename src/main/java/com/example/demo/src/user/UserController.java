@@ -89,11 +89,11 @@ public class UserController {
     @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
-        if(postUserReq.getEmail() == null){
+        if(postUserReq.getUserEmail() == null){
             return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
         }
         //이메일 정규표현
-        if(!isRegexEmail(postUserReq.getEmail())){
+        if(!isRegexEmail(postUserReq.getUserEmail())){
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
         try{
@@ -108,6 +108,7 @@ public class UserController {
      * [POST] /users/logIn
      * @return BaseResponse<PostLoginRes>
      */
+    /*
     @ResponseBody
     @PostMapping("/logIn")
     public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
@@ -120,7 +121,7 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-
+*/
     /**
      * 유저정보변경 API
      * [PATCH] /users/:userIdx

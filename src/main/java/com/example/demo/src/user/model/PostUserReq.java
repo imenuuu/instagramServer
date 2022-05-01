@@ -4,12 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class PostUserReq {
-    private String UserName;
-    private String id;
-    private String email;
-    private String password;
+    private String userName;
+    private String userPhonenumber;
+    private String userEmail;
+    private String userNickname;
+    private String userPassword;
+    private Date userBirth;
 }

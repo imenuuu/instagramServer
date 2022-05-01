@@ -23,7 +23,7 @@ public class UserDao {
         String getUsersQuery = "select * from UserInfo";
         return this.jdbcTemplate.query(getUsersQuery,
                 (rs,rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
+                        rs.getLong("userIdx"),
                         rs.getString("userName"),
                         rs.getString("ID"),
                         rs.getString("Email"),
@@ -32,11 +32,11 @@ public class UserDao {
     }
 
     public List<GetUserRes> getUsersByEmail(String email){
-        String getUsersByEmailQuery = "select * from UserInfo where email =?";
+        String getUsersByEmailQuery = "select * from User where userEmail =?";
         String getUsersByEmailParams = email;
         return this.jdbcTemplate.query(getUsersByEmailQuery,
                 (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
+                        rs.getLong("userIdx"),
                         rs.getString("userName"),
                         rs.getString("ID"),
                         rs.getString("Email"),
@@ -49,7 +49,7 @@ public class UserDao {
         int getUserParams = userIdx;
         return this.jdbcTemplate.queryForObject(getUserQuery,
                 (rs, rowNum) -> new GetUserRes(
-                        rs.getInt("userIdx"),
+                        rs.getLong("userIdx"),
                         rs.getString("userName"),
                         rs.getString("ID"),
                         rs.getString("Email"),
@@ -59,16 +59,18 @@ public class UserDao {
     
 
     public int createUser(PostUserReq postUserReq){
-        String createUserQuery = "insert into UserInfo (userName, ID, password, email) VALUES (?,?,?,?)";
-        Object[] createUserParams = new Object[]{postUserReq.getUserName(), postUserReq.getId(), postUserReq.getPassword(), postUserReq.getEmail()};
+        String createUserQuery = "insert into InstagramDB.User (userName, userPhonenumber, userEmail,userNickname,userPassword,userBirth) values (?,?,?,?,?,?)";
+        Object[] createUserParams = new Object[]{
+                postUserReq.getUserName(), postUserReq.getUserPhonenumber(),postUserReq.getUserEmail(), postUserReq.getUserNickname(),
+                postUserReq.getUserPassword(), postUserReq.getUserBirth() };
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
-        String lastInserIdQuery = "select last_insert_id()";
-        return this.jdbcTemplate.queryForObject(lastInserIdQuery,int.class);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class);
     }
 
     public int checkEmail(String email){
-        String checkEmailQuery = "select exists(select email from UserInfo where email = ?)";
+        String checkEmailQuery = "select exists(select userEmail from User where userEmail = ?)";
         String checkEmailParams = email;
         return this.jdbcTemplate.queryForObject(checkEmailQuery,
                 int.class,
@@ -82,7 +84,7 @@ public class UserDao {
 
         return this.jdbcTemplate.update(modifyUserNameQuery,modifyUserNameParams);
     }
-
+/*
     public User getPwd(PostLoginReq postLoginReq){
         String getPwdQuery = "select userIdx, password,email,userName,ID from UserInfo where ID = ?";
         String getPwdParams = postLoginReq.getId();
@@ -99,6 +101,6 @@ public class UserDao {
                 );
 
     }
-
+*/
 
 }
