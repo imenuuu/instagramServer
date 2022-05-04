@@ -2,7 +2,6 @@ package com.example.demo.src.user;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
 import com.example.demo.utils.SHA256;
@@ -49,7 +48,17 @@ public class UserProvider {
         catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
-                    }
+    }
+
+    public List<GetSearchUserRes> getSearchUsers(String searchContent) throws BaseException{
+        try {
+            List<GetSearchUserRes> getSearchUsersRes = userDao.getSearchUsers(searchContent);
+            return getSearchUsersRes;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 
 
     public GetUserRes getUser(Long userIdx) throws BaseException {
@@ -68,18 +77,25 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-/*
+    public int checkuserNickname(String userNickname) throws BaseException{
+        try{
+            return userDao.checkuserNickname(userNickname);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException{
         User user = userDao.getPwd(postLoginReq);
         String encryptPwd;
         try {
-            encryptPwd=new SHA256().encrypt(postLoginReq.getPassword());
+            encryptPwd=new SHA256().encrypt(postLoginReq.getUserPassword());
         } catch (Exception ignored) {
             throw new BaseException(PASSWORD_DECRYPTION_ERROR);
         }
 
         if(user.getUserPassword().equals(encryptPwd)){
-            Long userIdxIdx = user.getUserId();
+            Long userIdx = user.getUserIdx();
             String jwt = jwtService.createJwt(userIdx);
             return new PostLoginRes(userIdx,jwt);
         }
@@ -87,6 +103,8 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_LOGIN);
         }
 
-    }*/
+    }
+
+
 
 }

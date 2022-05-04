@@ -61,6 +61,23 @@ public class UserController {
     }
 
     /**
+     * 회원 검색기능 API
+     * [GET] app/users/:searchContent
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/searchContent/{searchContent}") //(GET) localhost:9000/app/users//searchContent/:searchContent
+    public BaseResponse<List<GetSearchUserRes>> getSearchUsers(@PathVariable("searchContent") String searchContent){
+        try{
+            List<GetSearchUserRes> getSearchUserRes=userProvider.getSearchUsers(searchContent);
+            return new BaseResponse<>(getSearchUserRes);
+        } catch (BaseException e) {
+            return new BaseResponse<>((e.getStatus()));
+        }
+
+    }
+
+    /**
      * 회원 1명 조회 API
      * [GET] /users/:userIdx
      * @return BaseResponse<GetUserRes>
@@ -108,7 +125,7 @@ public class UserController {
      * [POST] /users/logIn
      * @return BaseResponse<PostLoginRes>
      */
-    /*
+
     @ResponseBody
     @PostMapping("/logIn")
     public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
@@ -121,15 +138,16 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
-*/
+
     /**
-     * 유저정보변경 API
+     * 유저이름변경 API
      * [PATCH] /users/:userIdx
      * @return BaseResponse<String>
      */
     @ResponseBody
     @PatchMapping("/{userIdx}")
     public BaseResponse<String> modifyUserName(@PathVariable("userIdx") Long userIdx, @RequestBody User user){
+
         try {
             //jwt에서 idx 추출.
             int userIdxByJwt = jwtService.getUserIdx();
@@ -138,13 +156,32 @@ public class UserController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             //같다면 유저네임 변경
-            PatchUserReq patchUserReq = new PatchUserReq(userIdx,user.getUserName());
+            PatchUserReq patchUserReq = new PatchUserReq(userIdx,user.getUserNickname());
             userService.modifyUserName(patchUserReq);
-
             String result = "";
             return new BaseResponse<>(result);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    //유저정보변경 API
+
+    @ResponseBody
+    @PutMapping("/userInfo/{userIdx}")
+    public BaseResponse<String> modifyUserInfo(@PathVariable("userIdx") Long userIdx,@RequestBody User user){
+        try{
+            int userIdxByJwt=jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            PutUserReq putUserReq = new PutUserReq(userIdx,user.getProfileImgUrl(),user.getUserNickname(),user.getUserName(),user.getUserIntroduce(),user.getUserWebsite());
+            userService.modifyUserInfo(putUserReq);
+            String result = "";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+
         }
     }
 

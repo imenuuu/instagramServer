@@ -35,7 +35,7 @@ public class UserService {
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
         //중복
         if(userProvider.checkEmail(postUserReq.getUserEmail()) ==1){
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+            throw new BaseException(DUPLICATED_EMAIL);
         }
 
         String pwd;
@@ -58,12 +58,31 @@ public class UserService {
     }
 
     public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
+        if (userProvider.checkuserNickname(patchUserReq.getUserNickname())==1)
+        {
+            throw new BaseException(USERS_EXISTS_NICKNAME);
+        }
         try{
+
             int result = userDao.modifyUserName(patchUserReq);
             if(result == 0){
                 throw new BaseException(MODIFY_FAIL_USERNAME);
             }
         } catch(Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public void modifyUserInfo(PutUserReq putUserReq) throws BaseException{
+        if (userProvider.checkuserNickname(putUserReq.getUserNickname())==1)
+        {
+            throw new BaseException(USERS_EXISTS_NICKNAME);
+        }
+        try {
+            int result =userDao.modifyUserInfo(putUserReq);
+            if(result ==0){
+                throw new BaseException(MODIFY_FAIL_USERNAME);
+            }
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

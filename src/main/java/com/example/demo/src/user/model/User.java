@@ -11,22 +11,16 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 public class User {
-    private Long userIdx;
+
+    private Long UserIdx;
     private String profileImgUrl;
-    private String userPassword;
-    private String userWebsite;
-    private String userNickname;
     private String userName;
     private String userPhonenumber;
     private String userEmail;
-    private String userIntroduce;
-    private String userReactNow;
-    private String userSex;
-    private String userPublic;
-    private String userCelleb;
-    private Timestamp userUpdated_date;
-    private Timestamp userActived_date;
-    private Timestamp userStatus;
-    private Timestamp userCreated_date;
+    private String userNickname;
+    private String userPassword;
     private Date userBirth;
+    private String userIntroduce;
+    private String userWebsite;
+
 }

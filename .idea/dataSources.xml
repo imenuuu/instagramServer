@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="InstagramDB@instagram.c7k82oli1xya.ap-northeast-2.rds.amazonaws.com" uuid="f506114d-6bc6-4acd-9380-a7b1530bfd9e">
+    <data-source source="LOCAL" name="InstagramDB@instagram.c7k82oli1xya.ap-northeast-2.rds.amazonaws.com [2]" uuid="40e9b037-2afa-45d6-81ac-fccc2b34caa7">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
