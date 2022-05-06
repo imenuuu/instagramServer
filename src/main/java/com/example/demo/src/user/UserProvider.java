@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -106,5 +107,31 @@ public class UserProvider {
     }
 
 
-
+    @Transactional(readOnly = true)
+    public List<GetUserProfileRes> getUserProfile(String nickName) throws BaseException{
+        try{
+            List<GetUserProfileRes> getUserProfileRes=userDao.getUserProfile(nickName);
+            return getUserProfileRes;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    @Transactional(readOnly = true)
+    public List<GetUserBoardRes> getUserBoard(String nickName)  throws BaseException{
+        try{
+            List<GetUserBoardRes> getUserBoardRes=userDao.getUserBoard(nickName);
+            return getUserBoardRes;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    @Transactional(readOnly = true)
+    public List<GetUserHighlightRes> getUserHighlight(String nickName)  throws BaseException{
+        try{
+            List<GetUserHighlightRes> getUserHighlightRes =userDao.getUserHighlight(nickName);
+            return getUserHighlightRes;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

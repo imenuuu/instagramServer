@@ -7,9 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostBoardReq {
-    private Long boardIdx;
-    private Long user_id;
-    private Long positionInfo_id;
-    private String boardDescription;
+public class PostBoardCommentRes {
+    private String comment;
 }

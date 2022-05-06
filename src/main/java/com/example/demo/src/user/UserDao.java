@@ -7,9 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class UserDao {
@@ -147,6 +145,50 @@ public class UserDao {
 
     }
 
+
+    public List<GetUserProfileRes> getUserProfile(String nickName) {
+        String getProfileQuery="select userNickname,profileImgUrl,\n" +
+                "       userCelleb,count(Board.user_id)'boardCnt',\n" +
+                "       (select count(Follower.user_id) from Follower where Follower.followerid=@userIndex)'followerCnt'\n" +
+                ",(select count(Follow.user_id) from Follow where Follow.user_id=@userIndex)'followCnt',userName,\n" +
+                "       userIntroduce,userWebsite\n" +
+                "from User\n" +
+                "left join Board on Board.user_id=User.userIdx where User.userNickname=?";
+        String getProfileParams=nickName;
+        return this.jdbcTemplate.query(getProfileQuery,
+                (rs,rowNum)->new GetUserProfileRes(
+                        rs.getString("userNickname"),
+                        rs.getString("profileImgUrl"),
+                        rs.getString("userCelleb"),
+                        rs.getLong("boardCnt"),
+                        rs.getLong("followerCnt"),
+                        rs.getLong("followCnt"),
+                        rs.getString ("userName"),
+                        rs.getString("userIntroduce"),
+                        rs.getString("userWebsite")
+
+                ),getProfileParams
+                );
+    }
+    public List<GetUserHighlightRes> getUserHighlight(String nickName) {
+        String getUserHighlightQuery="select highlightImg,highlightTitle from StoryHighlightList join User on userIdx=user_id where userNickname=?";
+        String getUserHighlightParams=nickName;
+        return this.jdbcTemplate.query(getUserHighlightQuery,
+                (rs,rowNUm)->new GetUserHighlightRes(
+                        rs.getString("highlightImg"),
+                        rs.getString("highlightTitle")
+                ),getUserHighlightParams);
+    }
+
+    public List<GetUserBoardRes> getUserBoard(String nickName) {
+        String getUserBoardQuery="select boardImgUrl from BoardImg join User on BoardImg.user_Id=User.userIdx where userNickName=? and boardImgIndex=1";
+        String getUserBoardParams=nickName;
+        return this.jdbcTemplate.query(getUserBoardQuery,
+                (rs,rowNum)->new GetUserBoardRes(
+                        rs.getString("boardImgUrl")
+                ),getUserBoardParams);
+
+    }
 
 
 }

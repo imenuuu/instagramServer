@@ -9,6 +9,7 @@ import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -92,6 +93,27 @@ public class UserController {
             return new BaseResponse<>(getUserRes);
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+    @ResponseBody
+    @GetMapping("/profile")
+    public BaseResponse<LinkedHashMap<String, Object>> getUserProfile(@RequestParam(value="userNickname") String userNickname){
+        try {
+            List<GetUserProfileRes> getUserProfileRes=userProvider.getUserProfile(userNickname);
+            List<GetUserHighlightRes> getUserHighlightRes =userProvider.getUserHighlight(userNickname);
+            List<GetUserBoardRes> getUserBoardRes=userProvider.getUserBoard(userNickname);
+
+            LinkedHashMap<String,Object> resultMap=new LinkedHashMap<>();
+
+            resultMap.put("Profile",getUserProfileRes);
+            resultMap.put("Highlightlist", getUserHighlightRes);
+            resultMap.put("Boards",getUserBoardRes);
+
+            return new BaseResponse<>(resultMap);
+
+        } catch (BaseException e) {
+            return new BaseResponse<>((e.getStatus()));
         }
 
     }

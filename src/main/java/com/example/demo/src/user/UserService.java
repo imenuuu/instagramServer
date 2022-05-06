@@ -37,7 +37,6 @@ public class UserService {
         if(userProvider.checkEmail(postUserReq.getUserEmail()) ==1){
             throw new BaseException(DUPLICATED_EMAIL);
         }
-
         String pwd;
         try{
             //암호화

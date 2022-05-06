@@ -116,8 +116,8 @@ public class BoardDao {
                 "                then concat(TIMESTAMPDIFF(minute,ReCommentCreated_date,now()),'분 전')\n" +
                 "            else concat(TIMESTAMPDIFF(hour,ReCommentCreated_date,now()),'시간 전')\n" +
                 "           end as 'reCommentDate'\n" +
-                "from Comment join Board on Comment.board_id=Board.boardIdx\n" +
-                "             join ReComment on ReComment.comment_id=Comment.commentIdx join User CommentUser on CommentUser.userIdx =Comment.user_id\n" +
+                "from Comment left join Board on Comment.board_id=Board.boardIdx\n" +
+                "             left join ReComment on ReComment.comment_id=Comment.commentIdx join User CommentUser on CommentUser.userIdx =Comment.user_id\n" +
                 "where Board.boardIdx=? order by CommentCreated_date desc";
         Long getBoardCommentParams=boardIdx;
 
@@ -173,5 +173,13 @@ public class BoardDao {
                 );
 
 
+    }
+
+    public int createComment(PostBoardCommentReq postBoardCommentReq) {
+        String createBoardCommentQuery="insert into Comment(board_id ,user_id,comment) values(?,?,?)";
+        Object[] createBoardCommentParams = new Object[]{
+                postBoardCommentReq.getBoard_id(),postBoardCommentReq.getUser_id(),postBoardCommentReq.getComment()
+        };
+        return this.jdbcTemplate.update(createBoardCommentQuery,createBoardCommentParams);
     }
 }
