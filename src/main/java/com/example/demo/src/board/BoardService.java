@@ -1,8 +1,7 @@
 package com.example.demo.src.board;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.board.model.PostBoardCommentReq;
-import com.example.demo.src.board.model.PostBoardCommentRes;
+import com.example.demo.src.board.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,4 +29,47 @@ public class BoardService {
 
     }
 
+    public void createRecomment(PostBoardRecommentReq postBoardReommentReq) throws BaseException {
+        try {
+            int result=boardDao.createRecomment(postBoardReommentReq);
+            if(result==0){
+                throw new BaseException(MODIFY_FAIL_CREATECOMMENT);
+            }
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void createBoardLike(PostBoardLikeReq postBoardCommentReq) throws BaseException{
+        try {
+            int result = boardDao.createBoardLike(postBoardCommentReq);
+            if (result == 0) {
+                throw new BaseException(MODIFY_FAIL_CREATECOMMENT);
+            }
+        }catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void createCommentLike(PostCommentLikeReq postCommentLikeReq) throws BaseException{
+        try{
+            int result=boardDao.createCommentLike(postCommentLikeReq);
+            if(result ==0){
+                throw new BaseException(MODIFY_FAIL_CREATECOMMENT);
+            }
+        }catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void createRecommentLike(PostRecommentLikeReq postRecommentLikeReq) throws BaseException {
+        try{
+            int result=boardDao.createRecommentLike(postRecommentLikeReq);
+            if(result ==0){
+                throw new BaseException(MODIFY_FAIL_CREATECOMMENT);
+            }
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

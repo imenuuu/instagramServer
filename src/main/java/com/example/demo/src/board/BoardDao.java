@@ -95,8 +95,8 @@ public class BoardDao {
     public List<GetBoardCommentRes> getBoardComment(Long boardIdx) {
         String getBoardsCommentByBoardIdxQuery="select CommentUser.profileimgUrl'commentprofileImgUrl',CommentUser.userNickName'commentuserNickName',comment'comment',\n" +
                 "       case when TIMESTAMPDIFF(WEEK,CommentCreated_date,now())>1 then concat(TIMESTAMPDIFF(WEEK,CommentCreated_date,now()),'주 전')\n" +
-                "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())<24 then '1일 전'\n" +
-                "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())>24\n" +
+                "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())>24 then '1일 전'\n" +
+                "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())>48\n" +
                 "                then if(TIMESTAMPDIFF(DAY,CommentCreated_date,now())>7, date_format(CommentCreated_date,'%Y-%m-%d'),\n" +
                 "                        concat(TIMESTAMPDIFF(DAY,CommentCreated_date,now()),'일 전'))\n" +
                 "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())<1\n" +
@@ -108,8 +108,8 @@ public class BoardDao {
                 "       ReComment'reComment',\n" +
                 "       case when TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now())>1\n" +
                 "                then concat(TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now()),'주 전')\n" +
-                "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())<24 then '1일 전'\n" +
-                "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>24\n" +
+                "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>24 then '1일 전'\n" +
+                "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>48\n" +
                 "                then if(TIMESTAMPDIFF(DAY,ReCommentCreated_date,now())>7, date_format(ReCommentCreated_date,'%Y-%m-%d'),\n" +
                 "                        concat(TIMESTAMPDIFF(DAY,ReCommentCreated_date,now()),'일 전'))\n" +
                 "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())<1\n" +
@@ -143,16 +143,17 @@ public class BoardDao {
                 "                           then concat(YEAR(boardCreated),'년 ',MONTH(boardCreated),'월 ',DAY(boardCreated),'일')\n" +
                 "                    when YEAR(boardCreated)=YEAR(now()) then\n" +
                 "                        case\n" +
+                "                            when TIMESTAMPDIFF(hour,boardCreated,now())<1\n" +
+                "                                then concat(TIMESTAMPDIFF(minute,boardCreated,now()),'분 전')\n" +
+                "                            when TIMESTAMPDIFF(hour,boardCreated,now())<24\n" +
+                "                                then concat(TIMESTAMPDIFF(hour,boardCreated,now()),'시간 전')\n" +
                 "                              when (TIMESTAMPDIFF(DAY,boardCreated,now()))>7\n" +
                 "                                then concat(month(boardCreated),'월 ',DAY(boardCreated),'일')\n" +
                 "                            when TIMESTAMPDIFF(minute,boardCreated,now())<1\n" +
                 "                               then concat(TIMESTAMPDIFF(second,boardCreated,now()))\n" +
                 "                           when TIMESTAMPDIFF(hour,boardCreated,now())>24\n" +
                 "                                then concat(TIMESTAMPDIFF(DAY,boardCreated,now()),'일 전')\n" +
-                "                            when TIMESTAMPDIFF(hour,boardCreated,now())<1\n" +
-                "                                then concat(TIMESTAMPDIFF(minute,boardCreated,now()),'분 전')\n" +
-                "                            when TIMESTAMPDIFF(hour,boardCreated,now())<24\n" +
-                "                                then concat(TIMESTAMPDIFF(hour,boardCreated,now()),'시간 전')\n" +
+
                 "                            else concat(TIMESTAMPDIFF(second,boardCreated,now()),'초 전')\n" +
                 "                        end end as boardTime from Board join BoardImg on Board.boardIdx = board_id\n" +
                 "                            join User on Board.user_id=User.userIdx\n" +
@@ -181,5 +182,37 @@ public class BoardDao {
                 postBoardCommentReq.getBoard_id(),postBoardCommentReq.getUser_id(),postBoardCommentReq.getComment()
         };
         return this.jdbcTemplate.update(createBoardCommentQuery,createBoardCommentParams);
+    }
+
+    public int createRecomment(PostBoardRecommentReq postBoardReommentReq) {
+        String createBoardRecommentQuery ="insert into ReComment(board_id,comment_id,user_id,recomment) values(?,?,?,?)";
+        Object[] createBoardRecommentParams = new Object[]{
+                postBoardReommentReq.getBoard_id(),postBoardReommentReq.getComment_id(),postBoardReommentReq.getUser_id(),postBoardReommentReq.getRecomment()
+        };
+        return this.jdbcTemplate.update(createBoardRecommentQuery,createBoardRecommentParams);
+    }
+
+    public int createBoardLike(PostBoardLikeReq postBoardLikeReq) {
+        String createBoardLikeQuery ="insert into Boardlike(board_id,user_id) values(?,?)";
+        Object[] createBoardLikeParams = new Object[]{
+                postBoardLikeReq.getBoard_id(),postBoardLikeReq.getUser_id()
+        };
+        return this.jdbcTemplate.update(createBoardLikeQuery,createBoardLikeParams);
+    }
+
+    public int createCommentLike(PostCommentLikeReq postCommentLikeReq) {
+        String createCommentLikeQuery = "insert into CommentLike(comment_id,user_id) values(?,?)";
+        Object[] createCommentLikeParams = new Object[]{
+                postCommentLikeReq.getComment_id(),postCommentLikeReq.getUser_id()
+        };
+        return this.jdbcTemplate.update(createCommentLikeQuery,createCommentLikeParams);
+    }
+
+    public int createRecommentLike(PostRecommentLikeReq postRecommentLikeReq) {
+        String createRecommentLikeQuery ="insert into ReCommentLike(recomment_id,user_id) values(?,?)";
+        Object[] createRecommentLikeParams = new Object[]{
+                postRecommentLikeReq.getRecomment_id(),postRecommentLikeReq.getUser_id()
+        };
+        return this.jdbcTemplate.update(createRecommentLikeQuery,createRecommentLikeParams);
     }
 }

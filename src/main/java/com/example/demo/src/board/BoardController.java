@@ -3,8 +3,6 @@ package com.example.demo.src.board;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.board.model.*;
-import com.example.demo.src.user.model.PostUserReq;
-import com.example.demo.src.user.model.PostUserRes;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +92,61 @@ public class BoardController {
 
         } catch (BaseException e) {
             return new BaseResponse<>((e.getStatus()));
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("comments/{boardIdx}/{commentIdx}")
+    public BaseResponse<String> createRecomment(@PathVariable("boardIdx") Long boardIdx, @PathVariable("commentIdx") Long commentIdx,@RequestBody ReComment reComment){
+        try {
+            int userIdx=jwtService.getUserIdx();
+            PostBoardRecommentReq postBoardRecommentReq = new PostBoardRecommentReq(boardIdx, commentIdx,(long) userIdx,reComment.getRecomment());
+            boardService.createRecomment(postBoardRecommentReq);
+            String result="";
+            return new BaseResponse<>(result);
+
+        } catch (BaseException e) {
+            return new BaseResponse<>((e.getStatus()));
+        }
+    }
+    @ResponseBody
+    @PostMapping("/boardLike/{boardIdx}")
+    public BaseResponse<String> createBoardLike(@PathVariable("boardIdx") Long boardIdx) {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            PostBoardLikeReq postBoardLikeReq=new PostBoardLikeReq(boardIdx, (long) userIdx);
+            boardService.createBoardLike(postBoardLikeReq);
+            String result="";
+            return new BaseResponse<>(result);
+
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    @ResponseBody
+    @PostMapping("/commentLike/{commentIdx}")
+    public BaseResponse<String> createCommentLike(@PathVariable("commentIdx") Long commentIdx) {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            PostCommentLikeReq postCommentLikeReq=new PostCommentLikeReq(commentIdx, (long) userIdx);
+            boardService.createCommentLike(postCommentLikeReq);
+            String result="";
+            return new BaseResponse<>(result);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    @ResponseBody
+    @PostMapping("/recommentLike/{reCommentIdx}")
+    public BaseResponse<String> createRecommentLike(@PathVariable("reCommentIdx") Long reCommentIdx) {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            PostRecommentLikeReq postRecommentLikeReq=new PostRecommentLikeReq(reCommentIdx, (long) userIdx);
+            boardService.createRecommentLike(postRecommentLikeReq);
+            String result="";
+            return new BaseResponse<>(result);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
         }
     }
 /*

@@ -7,9 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostBoardRecommentReq {
-    private Long board_id;
-    private Long comment_id;
+public class PostRecommentLikeReq {
+    private Long recomment_id;
     private Long user_id;
-    private String recomment;
 }
