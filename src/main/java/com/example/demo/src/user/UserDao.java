@@ -149,8 +149,8 @@ public class UserDao {
     public List<GetUserProfileRes> getUserProfile(String nickName) {
         String getProfileQuery="select userNickname,profileImgUrl,\n" +
                 "       userCelleb,count(Board.user_id)'boardCnt',\n" +
-                "       (select count(Follower.user_id) from Follower where Follower.followerid=@userIndex)'followerCnt'\n" +
-                ",(select count(Follow.user_id) from Follow where Follow.user_id=@userIndex)'followCnt',userName,\n" +
+                "       (select count(Follower.user_id) from Follower where Follower.followerid=userIdx)'followerCnt'\n" +
+                ",(select count(Follow.user_id) from Follow where Follow.user_id=userIdx)'followCnt',userName,\n" +
                 "       userIntroduce,userWebsite\n" +
                 "from User\n" +
                 "left join Board on Board.user_id=User.userIdx where User.userNickname=?";
