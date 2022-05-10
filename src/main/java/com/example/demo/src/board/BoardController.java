@@ -96,7 +96,7 @@ public class BoardController {
     }
 
     @ResponseBody
-    @PostMapping("comments/{boardIdx}/{commentIdx}")
+    @PostMapping("/comments/{boardIdx}/{commentIdx}")
     public BaseResponse<String> createRecomment(@PathVariable("boardIdx") Long boardIdx, @PathVariable("commentIdx") Long commentIdx,@RequestBody ReComment reComment){
         try {
             int userIdx=jwtService.getUserIdx();
@@ -110,7 +110,7 @@ public class BoardController {
         }
     }
     @ResponseBody
-    @PostMapping("/boardLike/{boardIdx}")
+    @PostMapping("/board-like/{boardIdx}")
     public BaseResponse<String> createBoardLike(@PathVariable("boardIdx") Long boardIdx) {
         try {
             int userIdx = jwtService.getUserIdx();
@@ -124,7 +124,7 @@ public class BoardController {
         }
     }
     @ResponseBody
-    @PostMapping("/commentLike/{commentIdx}")
+    @PostMapping("/comment-like/{commentIdx}")
     public BaseResponse<String> createCommentLike(@PathVariable("commentIdx") Long commentIdx) {
         try {
             int userIdx = jwtService.getUserIdx();
@@ -137,12 +137,26 @@ public class BoardController {
         }
     }
     @ResponseBody
-    @PostMapping("/recommentLike/{reCommentIdx}")
-    public BaseResponse<String> createRecommentLike(@PathVariable("reCommentIdx") Long reCommentIdx) {
+    @PostMapping("/recomment-like/{commentIdx}/{reCommentIdx}")
+    public BaseResponse<String> createRecommentLike(@PathVariable("commentIdx") Long commentIdx,@PathVariable("reCommentIdx") Long reCommentIdx) {
         try {
             int userIdx = jwtService.getUserIdx();
-            PostRecommentLikeReq postRecommentLikeReq=new PostRecommentLikeReq(reCommentIdx, (long) userIdx);
+            PostRecommentLikeReq postRecommentLikeReq=new PostRecommentLikeReq(commentIdx,reCommentIdx, (long) userIdx);
             boardService.createRecommentLike(postRecommentLikeReq);
+            String result="";
+            return new BaseResponse<>(result);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PatchMapping("/comments/{commentIdx}")
+    public BaseResponse<String> deleteComment(@PathVariable("commentIdx") Long commentIdx){
+        try{
+            int userIdx = jwtService.getUserIdx();
+            DeleteCommentReq deleteCommentReq = new DeleteCommentReq(commentIdx, (long) userIdx);
+            boardService.deleteComment(deleteCommentReq);
             String result="";
             return new BaseResponse<>(result);
         } catch (BaseException e) {

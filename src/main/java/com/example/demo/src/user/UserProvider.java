@@ -51,9 +51,9 @@ public class UserProvider {
         }
     }
 
-    public List<GetSearchUserRes> getSearchUsers(String searchContent) throws BaseException{
+    public List<GetSearchUserRes> getSearchUsers(GetSearchUserReq getSearchUserReq) throws BaseException{
         try {
-            List<GetSearchUserRes> getSearchUsersRes = userDao.getSearchUsers(searchContent);
+            List<GetSearchUserRes> getSearchUsersRes = userDao.getSearchUsers(getSearchUserReq);
             return getSearchUsersRes;
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
@@ -89,6 +89,17 @@ public class UserProvider {
     public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException{
         User user = userDao.getPwd(postLoginReq);
         String encryptPwd;
+
+        if(checkUserStatus(postLoginReq.getUserEmail())==1) {
+            throw new BaseException(FAILED_TO_LOGIN_USERSTATUS);
+        }
+        if(postLoginReq.getUserEmail()==null){
+            throw new BaseException(FAILED_TO_LOGIN_EMAILNULL);
+        }
+        if(postLoginReq.getUserPassword()==null){
+            throw new BaseException(FAILED_TO_LOGIN_PWDNULL);
+        }
+
         try {
             encryptPwd=new SHA256().encrypt(postLoginReq.getUserPassword());
         } catch (Exception ignored) {
@@ -102,6 +113,16 @@ public class UserProvider {
         }
         else{
             throw new BaseException(FAILED_TO_LOGIN);
+        }
+
+    }
+
+    public int checkUserStatus(String userEmail) throws BaseException{
+        try {
+            return userDao.checkUserStatus(userEmail);
+
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
         }
 
     }

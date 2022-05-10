@@ -94,31 +94,29 @@ public class BoardDao {
 
     public List<GetBoardCommentRes> getBoardComment(Long boardIdx) {
         String getBoardsCommentByBoardIdxQuery="select CommentUser.profileimgUrl'commentprofileImgUrl',CommentUser.userNickName'commentuserNickName',comment'comment',\n" +
-                "       case when TIMESTAMPDIFF(WEEK,CommentCreated_date,now())>1 then concat(TIMESTAMPDIFF(WEEK,CommentCreated_date,now()),'주 전')\n" +
-                "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())>24 then '1일 전'\n" +
-                "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())>48\n" +
-                "                then if(TIMESTAMPDIFF(DAY,CommentCreated_date,now())>7, date_format(CommentCreated_date,'%Y-%m-%d'),\n" +
-                "                        concat(TIMESTAMPDIFF(DAY,CommentCreated_date,now()),'일 전'))\n" +
+                "       case when TIMESTAMPDIFF(WEEK,CommentCreated_date,now())>1 " +
+                "                   then concat(TIMESTAMPDIFF(WEEK,CommentCreated_date,now()),'주 전')\n" +
+                "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())>24\n" +
+                "                   then concat(TIMESTAMPDIFF(DAY,CommentCreated_date,now()),'일 전')\n" +
                 "            when TIMESTAMPDIFF(hour, CommentCreated_date,now())<1\n" +
-                "                then concat(TIMESTAMPDIFF(minute,CommentCreated_date,now()),'분 전')\n" +
+                "                   then concat(TIMESTAMPDIFF(minute,CommentCreated_date,now()),'분 전')\n" +
                 "            else concat(TIMESTAMPDIFF(hour,CommentCreated_date,now()),'시간 전')\n" +
                 "           end as 'commentDate',\n" +
-                "       (select profileimgUrl from User where User.userIdx=ReComment.user_id)'recommentprofileImgUrl',\n" +
-                "       (select userNickName from User where User.userIdx=ReComment.user_id)'recommentuserNickName',\n" +
-                "       ReComment'reComment',\n" +
-                "       case when TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now())>1\n" +
+                "       (select profileimgUrl from User where User.userIdx=ReComment.user_id order by reCommentCreated_date asc limit 1)'recommentprofileImgUrl',\n" +
+                "       (select userNickName from User where User.userIdx=ReComment.user_id order by reCommentCreated_date asc limit 1)'recommentuserNickName',\n" +
+                "       (select ReComment from User where User.userIdx=ReComment.user_id order by reCommentCreated_date asc limit 1)'reComment',\n" +
+                "       case " +
+                "           when TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now())>1\n" +
                 "                then concat(TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now()),'주 전')\n" +
-                "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>24 then '1일 전'\n" +
-                "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>48\n" +
-                "                then if(TIMESTAMPDIFF(DAY,ReCommentCreated_date,now())>7, date_format(ReCommentCreated_date,'%Y-%m-%d'),\n" +
-                "                        concat(TIMESTAMPDIFF(DAY,ReCommentCreated_date,now()),'일 전'))\n" +
+                "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>24\n" +
+                "                then concat(TIMESTAMPDIFF(DAY,ReCommentCreated_date,now()),'일 전')\n" +
                 "            when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())<1\n" +
                 "                then concat(TIMESTAMPDIFF(minute,ReCommentCreated_date,now()),'분 전')\n" +
                 "            else concat(TIMESTAMPDIFF(hour,ReCommentCreated_date,now()),'시간 전')\n" +
                 "           end as 'reCommentDate'\n" +
                 "from Comment left join Board on Comment.board_id=Board.boardIdx\n" +
                 "             left join ReComment on ReComment.comment_id=Comment.commentIdx join User CommentUser on CommentUser.userIdx =Comment.user_id\n" +
-                "where Board.boardIdx=? order by CommentCreated_date desc";
+                "where Board.boardIdx=? and commentStatus='TRUE' order by CommentCreated_date desc";
         Long getBoardCommentParams=boardIdx;
 
         return this.jdbcTemplate.query(getBoardsCommentByBoardIdxQuery,
@@ -153,7 +151,6 @@ public class BoardDao {
                 "                               then concat(TIMESTAMPDIFF(second,boardCreated,now()))\n" +
                 "                           when TIMESTAMPDIFF(hour,boardCreated,now())>24\n" +
                 "                                then concat(TIMESTAMPDIFF(DAY,boardCreated,now()),'일 전')\n" +
-
                 "                            else concat(TIMESTAMPDIFF(second,boardCreated,now()),'초 전')\n" +
                 "                        end end as boardTime from Board join BoardImg on Board.boardIdx = board_id\n" +
                 "                            join User on Board.user_id=User.userIdx\n" +
@@ -209,10 +206,20 @@ public class BoardDao {
     }
 
     public int createRecommentLike(PostRecommentLikeReq postRecommentLikeReq) {
-        String createRecommentLikeQuery ="insert into ReCommentLike(recomment_id,user_id) values(?,?)";
+        String createRecommentLikeQuery ="insert into ReCommentLike(comment_id,recomment_id,user_id) values(?,?,?)";
         Object[] createRecommentLikeParams = new Object[]{
-                postRecommentLikeReq.getRecomment_id(),postRecommentLikeReq.getUser_id()
+                postRecommentLikeReq.getComment_id(), postRecommentLikeReq.getRecomment_id(),postRecommentLikeReq.getUser_id()
         };
         return this.jdbcTemplate.update(createRecommentLikeQuery,createRecommentLikeParams);
     }
+
+    public int deleteComment(DeleteCommentReq deleteCommentReq) {
+        String deleteCommentQuery = "update Comment set commentStatus='FALSE' where user_id=? and commentIdx=?";
+        Object[] deleteCommentParams =new Object[]{
+                deleteCommentReq.getUser_id(),deleteCommentReq.getCommentIdx()
+        };
+
+        return this.jdbcTemplate.update(deleteCommentQuery,deleteCommentParams);
+    }
+
 }

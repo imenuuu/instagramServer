@@ -63,14 +63,16 @@ public class UserController {
 
     /**
      * 회원 검색기능 API
-     * [GET] app/users/:searchContent
+     * [GET] app/users/search?searchContent=
      * @return
      */
     @ResponseBody
-    @GetMapping("/searchContent/{searchContent}") //(GET) localhost:9000/app/users//searchContent/:searchContent
-    public BaseResponse<List<GetSearchUserRes>> getSearchUsers(@PathVariable("searchContent") String searchContent){
+    @GetMapping("/search") //(GET) localhost:9000/app/users/search?serachContent=
+    public BaseResponse<List<GetSearchUserRes>> getSearchUsers(@RequestParam(value="searchContent") String searchContent){
         try{
-            List<GetSearchUserRes> getSearchUserRes=userProvider.getSearchUsers(searchContent);
+            GetSearchUserReq getSearchUserReq=new GetSearchUserReq(searchContent,searchContent);
+            List<GetSearchUserRes> getSearchUserRes=userProvider.getSearchUsers(getSearchUserReq);
+            System.out.println(getSearchUserReq.getUserNickname());
             return new BaseResponse<>(getSearchUserRes);
         } catch (BaseException e) {
             return new BaseResponse<>((e.getStatus()));
@@ -89,6 +91,7 @@ public class UserController {
     public BaseResponse<GetUserRes> getUser(@PathVariable("userIdx") Long userIdx) {
         // Get Users
         try{
+
             GetUserRes getUserRes = userProvider.getUser(userIdx);
             return new BaseResponse<>(getUserRes);
         } catch(BaseException exception){
@@ -96,6 +99,7 @@ public class UserController {
         }
 
     }
+    //user/apps/profile/userNickname=?
     @ResponseBody
     @GetMapping("/profile")
     public BaseResponse<LinkedHashMap<String, Object>> getUserProfile(@RequestParam(value="userNickname") String userNickname){
@@ -151,9 +155,11 @@ public class UserController {
     @ResponseBody
     @PostMapping("/logIn")
     public BaseResponse<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq){
+
         try{
             // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
             // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
+
             PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
             return new BaseResponse<>(postLoginRes);
         } catch (BaseException exception){
@@ -186,11 +192,28 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+    @ResponseBody
+    @PatchMapping("/user-status/{userIdx}")
+    public BaseResponse<String> modifyUserStatus(@PathVariable("userIdx") Long userIdx){
+        try {
+            int userIdxByJwt=jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            PatchUserStatusReq patchUserStatusReq=new PatchUserStatusReq(userIdx);
+            userService.modifyUserStatus(patchUserStatusReq);
+            String result="";
+            return new BaseResponse<>(result);
+        } catch (BaseException e) {
+           return new BaseResponse<>(e.getStatus());
+        }
+
+    }
 
     //유저정보변경 API
 
     @ResponseBody
-    @PutMapping("/userInfo/{userIdx}")
+    @PutMapping("/user-info/{userIdx}")
     public BaseResponse<String> modifyUserInfo(@PathVariable("userIdx") Long userIdx,@RequestBody User user){
         try{
             int userIdxByJwt=jwtService.getUserIdx();
@@ -206,6 +229,13 @@ public class UserController {
 
         }
     }
+    @ResponseBody
+    @GetMapping("/oauth")
+    public void home(@RequestParam String code)throws Exception{
+        System.out.println(code);
+
+    }
+
 
 
 }

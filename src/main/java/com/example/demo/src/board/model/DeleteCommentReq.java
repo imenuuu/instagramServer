@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-public class PostRecommentLikeReq {
-    private Long comment_id;
-    private Long recomment_id;
+public class DeleteCommentReq {
+    private Long commentIdx;
     private Long user_id;
 }

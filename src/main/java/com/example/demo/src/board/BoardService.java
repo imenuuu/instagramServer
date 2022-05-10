@@ -10,10 +10,12 @@ import static com.example.demo.config.BaseResponseStatus.*;
 @Service
 public class BoardService {
     private final BoardDao boardDao;
+    private final BoardProvider boardProvider;
 
     @Autowired
-    public BoardService(BoardDao boardDao) {
+    public BoardService(BoardDao boardDao, BoardProvider boardProvider) {
         this.boardDao = boardDao;
+        this.boardProvider = boardProvider;
     }
 
     public void createComment(PostBoardCommentReq postBoardCommentReq) throws BaseException {
@@ -72,4 +74,12 @@ public class BoardService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public void deleteComment(DeleteCommentReq deleteCommentReq) throws BaseException{
+
+            int result = boardDao.deleteComment(deleteCommentReq);
+
+
+    }
+
 }

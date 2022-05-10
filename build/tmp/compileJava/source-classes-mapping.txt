@@ -1,25 +1,27 @@
 com/example/demo/src/board/model/PostBoardCommentReq.java
  com.example.demo.src.board.model.PostBoardCommentReq
-com/example/demo/src/board/BoardProvider.java
- com.example.demo.src.board.BoardProvider
+com/example/demo/src/user/model/GetUserRes.java
+ com.example.demo.src.user.model.GetUserRes
+com/example/demo/src/user/model/GetUserHighlightRes.java
+ com.example.demo.src.user.model.GetUserHighlightRes
 com/example/demo/config/Constant.java
  com.example.demo.config.Constant
 com/example/demo/src/board/model/PostBoardRecommentReq.java
  com.example.demo.src.board.model.PostBoardRecommentReq
 com/example/demo/utils/ValidationRegex.java
  com.example.demo.utils.ValidationRegex
-com/example/demo/config/BaseResponseStatus.java
- com.example.demo.config.BaseResponseStatus
+com/example/demo/src/user/model/PostLoginReq.java
+ com.example.demo.src.user.model.PostLoginReq
 com/example/demo/src/Story/model/Story.java
  com.example.demo.src.Story.model.Story
 com/example/demo/src/board/model/PostRecommentLikeReq.java
  com.example.demo.src.board.model.PostRecommentLikeReq
-com/example/demo/src/board/BoardDao.java
- com.example.demo.src.board.BoardDao
+com/example/demo/DemoApplication.java
+ com.example.demo.DemoApplication
 com/example/demo/src/board/model/PostBoardLikeReq.java
  com.example.demo.src.board.model.PostBoardLikeReq
-com/example/demo/src/Story/StoryController.java
- com.example.demo.src.Story.StoryController
+com/example/demo/src/board/model/GetBoardFollowRes.java
+ com.example.demo.src.board.model.GetBoardFollowRes
 com/example/demo/src/user/model/PutUserReq.java
  com.example.demo.src.user.model.PutUserReq
 com/example/demo/src/board/model/PostBoardReq.java
@@ -32,16 +34,16 @@ com/example/demo/src/board/model/Board.java
  com.example.demo.src.board.model.Board
 com/example/demo/src/user/model/PostUserRes.java
  com.example.demo.src.user.model.PostUserRes
-com/example/demo/config/BaseResponse.java
- com.example.demo.config.BaseResponse
+com/example/demo/src/board/model/DeleteCommentReq.java
+ com.example.demo.src.board.model.DeleteCommentReq
 com/example/demo/src/Story/StoryService.java
  com.example.demo.src.Story.StoryService
 com/example/demo/src/board/model/ReComment.java
  com.example.demo.src.board.model.ReComment
-com/example/demo/src/user/UserService.java
- com.example.demo.src.user.UserService
-com/example/demo/config/BaseException.java
- com.example.demo.config.BaseException
+com/example/demo/src/user/model/User.java
+ com.example.demo.src.user.model.User
+com/example/demo/src/board/BoardDao.java
+ com.example.demo.src.board.BoardDao
 com/example/demo/src/Story/model/PostStoryReq.java
  com.example.demo.src.Story.model.PostStoryReq
 com/example/demo/src/user/model/GetUserProfileRes.java
@@ -50,8 +52,10 @@ com/example/demo/utils/SHA256.java
  com.example.demo.utils.SHA256
 com/example/demo/src/user/model/PostUserReq.java
  com.example.demo.src.user.model.PostUserReq
-com/example/demo/src/board/BoardService.java
- com.example.demo.src.board.BoardService
+com/example/demo/src/board/model/PostCommentLikeReq.java
+ com.example.demo.src.board.model.PostCommentLikeReq
+com/example/demo/src/board/model/Comment.java
+ com.example.demo.src.board.model.Comment
 com/example/demo/src/board/model/GetBoardRes.java
  com.example.demo.src.board.model.GetBoardRes
 com/example/demo/src/Story/model/GetStorykeepRes.java
@@ -64,8 +68,8 @@ com/example/demo/src/board/model/PostBoardRes.java
  com.example.demo.src.board.model.PostBoardRes
 com/example/demo/src/Story/model/GetStoryRes.java
  com.example.demo.src.Story.model.GetStoryRes
-com/example/demo/src/user/UserDao.java
- com.example.demo.src.user.UserDao
+com/example/demo/src/user/model/GetSearchUserRes.java
+ com.example.demo.src.user.model.GetSearchUserRes
 com/example/demo/src/board/model/PostBoardCommentRes.java
  com.example.demo.src.board.model.PostBoardCommentRes
 com/example/demo/src/Story/StoryDao.java
@@ -76,31 +80,35 @@ com/example/demo/src/WebSecurityConfig.java
  com.example.demo.src.WebSecurityConfig
 com/example/demo/src/test/TestController.java
  com.example.demo.src.test.TestController
-com/example/demo/src/user/model/GetUserHighlightRes.java
- com.example.demo.src.user.model.GetUserHighlightRes
-com/example/demo/src/board/model/Comment.java
- com.example.demo.src.board.model.Comment
+com/example/demo/src/user/model/PatchUserStatusReq.java
+ com.example.demo.src.user.model.PatchUserStatusReq
+com/example/demo/src/user/model/GetUserStatusRes.java
+ com.example.demo.src.user.model.GetUserStatusRes
+com/example/demo/src/Story/StoryController.java
+ com.example.demo.src.Story.StoryController
 com/example/demo/src/Story/StoryProvider.java
  com.example.demo.src.Story.StoryProvider
-com/example/demo/src/user/model/PostLoginReq.java
- com.example.demo.src.user.model.PostLoginReq
-com/example/demo/src/user/UserController.java
- com.example.demo.src.user.UserController
+com/example/demo/src/board/BoardProvider.java
+ com.example.demo.src.board.BoardProvider
+com/example/demo/src/board/BoardService.java
+ com.example.demo.src.board.BoardService
+com/example/demo/config/BaseResponseStatus.java
+ com.example.demo.config.BaseResponseStatus
+com/example/demo/config/BaseResponse.java
+ com.example.demo.config.BaseResponse
 com/example/demo/src/board/BoardController.java
  com.example.demo.src.board.BoardController
-com/example/demo/src/user/model/User.java
- com.example.demo.src.user.model.User
-com/example/demo/src/board/model/GetBoardFollowRes.java
- com.example.demo.src.board.model.GetBoardFollowRes
-com/example/demo/src/board/model/PostCommentLikeReq.java
- com.example.demo.src.board.model.PostCommentLikeReq
-com/example/demo/src/user/model/GetUserRes.java
- com.example.demo.src.user.model.GetUserRes
-com/example/demo/src/user/model/GetSearchUserRes.java
- com.example.demo.src.user.model.GetSearchUserRes
-com/example/demo/DemoApplication.java
- com.example.demo.DemoApplication
+com/example/demo/config/BaseException.java
+ com.example.demo.config.BaseException
 com/example/demo/utils/JwtService.java
  com.example.demo.utils.JwtService
+com/example/demo/src/user/model/GetSearchUserReq.java
+ com.example.demo.src.user.model.GetSearchUserReq
+com/example/demo/src/user/UserDao.java
+ com.example.demo.src.user.UserDao
+com/example/demo/src/user/UserService.java
+ com.example.demo.src.user.UserService
+com/example/demo/src/user/UserController.java
+ com.example.demo.src.user.UserController
 com/example/demo/src/user/UserProvider.java
  com.example.demo.src.user.UserProvider

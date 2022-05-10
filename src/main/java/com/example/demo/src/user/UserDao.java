@@ -51,19 +51,6 @@ public class UserDao {
 
 
     }
-    public List<GetSearchUserRes> getSearchUsers(String searchContent) {
-        String getSearchUsersBysearchContentQuery="select profileImgUrl,userNickname,userName from User where userNickname like '%searchContent%' or userName like '%searchContent%'";
-        String getSearchUsersBysearchContentParams="%"+searchContent+"%";
-
-        return this.jdbcTemplate.query(getSearchUsersBysearchContentQuery,
-                (rs,rowNum)-> new GetSearchUserRes(
-                        rs.getString("profileImgUrl"),
-                        rs.getString("userNickname"),
-                        rs.getString("userName")),getSearchUsersBysearchContentParams
-                );
-
-
-    }
 
     public GetUserRes getUser(Long userIdx){
         String getUserQuery = "select userIdx,userName,userPhonenumber,userEmail,userNickName,userPassword,userBirth from User where userIdx = ?";
@@ -191,4 +178,31 @@ public class UserDao {
     }
 
 
+    public int modifyUserStatus(PatchUserStatusReq patchUserStatusReq) {
+        String patchUserStatusQuery="update User set userStatus='FALSE' where userIdx=?";
+        Object[] patchUserStausParams=new Object[]{
+                patchUserStatusReq.getUserIdx()
+        };
+        return this.jdbcTemplate.update(patchUserStatusQuery,patchUserStausParams);
+    }
+
+    public int checkUserStatus(String userEmail) {
+        String checkUserStatusQuery="select exists(select userEmail from User where userEmail=? and userStatus='FALSE')";
+        String checkUserStatusParams=userEmail;
+
+        return this.jdbcTemplate.queryForObject(checkUserStatusQuery,int.class,checkUserStatusParams);
+    }
+
+    public List<GetSearchUserRes> getSearchUsers(GetSearchUserReq getSearchUserReq) {
+        String getSearchUserQuery="select profileImgUrl,userNickname,userName from User where userNickname like ? or userName like ?";
+        String getSearchuserNicknameParmas="%"+getSearchUserReq.getUserNickname()+"%";
+        String getSearchuserNameParmas="%"+getSearchUserReq.getUserName()+"%";
+        return this.jdbcTemplate.query(getSearchUserQuery,
+                (rs,rowNum)->new GetSearchUserRes(
+                        rs.getString("profileImgUrl"),
+                        rs.getString("userNickname"),
+                        rs.getString("userName")
+                ),getSearchuserNicknameParmas,getSearchuserNameParmas
+                );
+    }
 }
