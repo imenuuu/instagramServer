@@ -39,6 +39,7 @@ public enum BaseResponseStatus {
      */
     // Common
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
+    SEARCH_RESULT_NO(false,3001,"검색 결과가 없습니다."),
 
     // [POST] /users
     USERS_EXISTS_NICKNAME(false,3011,"이미 존재하는 닉네임입니다."),
@@ -51,6 +52,8 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN_USERSTATUS(false,3016,"비활성상태입니다. 로그인하려면 계속하기를 눌러주세요"),
 
 
+    FAILED_TO_GETPROFILE(false,3017,"유저 정보를 찾을 수 없습니다"),
+    FAILED_TO_GETPROFILE_NO_NAME(false,3018,"유저 닉네임이 존재하지 않습니다."),
 
     /**
      * 4000 : Database, Server 오류

@@ -52,8 +52,14 @@ public class UserProvider {
     }
 
     public List<GetSearchUserRes> getSearchUsers(GetSearchUserReq getSearchUserReq) throws BaseException{
+        if(userDao.getSearchUsersCount(getSearchUserReq)==0){
+            throw new BaseException(SEARCH_RESULT_NO);
+
+        }
         try {
             List<GetSearchUserRes> getSearchUsersRes = userDao.getSearchUsers(getSearchUserReq);
+
+
             return getSearchUsersRes;
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
@@ -126,12 +132,23 @@ public class UserProvider {
         }
 
     }
+    public int checkUserStatusbyUserNickname(String nickName)throws BaseException{
+        return userDao.checkUserStatusbyUserNickname(nickName);
+    }
 
 
     @Transactional(readOnly = true)
     public List<GetUserProfileRes> getUserProfile(String nickName) throws BaseException{
+
+        if(checkUserStatusbyUserNickname(nickName)==1){
+            throw new BaseException(FAILED_TO_GETPROFILE);
+        }
+        if(checkuserNickname(nickName)==0){
+            throw new BaseException(FAILED_TO_GETPROFILE_NO_NAME);
+        }
         try{
             List<GetUserProfileRes> getUserProfileRes=userDao.getUserProfile(nickName);
+
             return getUserProfileRes;
         }catch(Exception e){
             throw new BaseException(DATABASE_ERROR);

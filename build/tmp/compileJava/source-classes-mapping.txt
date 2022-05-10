@@ -84,31 +84,31 @@ com/example/demo/src/user/model/PatchUserStatusReq.java
  com.example.demo.src.user.model.PatchUserStatusReq
 com/example/demo/src/user/model/GetUserStatusRes.java
  com.example.demo.src.user.model.GetUserStatusRes
+com/example/demo/src/user/model/GetSearchUserReq.java
+ com.example.demo.src.user.model.GetSearchUserReq
+com/example/demo/src/user/UserDao.java
+ com.example.demo.src.user.UserDao
 com/example/demo/src/Story/StoryController.java
  com.example.demo.src.Story.StoryController
 com/example/demo/src/Story/StoryProvider.java
  com.example.demo.src.Story.StoryProvider
 com/example/demo/src/board/BoardProvider.java
  com.example.demo.src.board.BoardProvider
-com/example/demo/src/board/BoardService.java
- com.example.demo.src.board.BoardService
+com/example/demo/src/user/UserService.java
+ com.example.demo.src.user.UserService
 com/example/demo/config/BaseResponseStatus.java
  com.example.demo.config.BaseResponseStatus
-com/example/demo/config/BaseResponse.java
- com.example.demo.config.BaseResponse
-com/example/demo/src/board/BoardController.java
- com.example.demo.src.board.BoardController
+com/example/demo/src/board/BoardService.java
+ com.example.demo.src.board.BoardService
 com/example/demo/config/BaseException.java
  com.example.demo.config.BaseException
 com/example/demo/utils/JwtService.java
  com.example.demo.utils.JwtService
-com/example/demo/src/user/model/GetSearchUserReq.java
- com.example.demo.src.user.model.GetSearchUserReq
-com/example/demo/src/user/UserDao.java
- com.example.demo.src.user.UserDao
-com/example/demo/src/user/UserService.java
- com.example.demo.src.user.UserService
 com/example/demo/src/user/UserController.java
  com.example.demo.src.user.UserController
 com/example/demo/src/user/UserProvider.java
  com.example.demo.src.user.UserProvider
+com/example/demo/config/BaseResponse.java
+ com.example.demo.config.BaseResponse
+com/example/demo/src/board/BoardController.java
+ com.example.demo.src.board.BoardController

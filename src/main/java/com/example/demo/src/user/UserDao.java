@@ -205,4 +205,19 @@ public class UserDao {
                 ),getSearchuserNicknameParmas,getSearchuserNameParmas
                 );
     }
+
+    public int getSearchUsersCount(GetSearchUserReq getSearchUserReq) {
+        String getSearchUsersCountQuery="select exists(select profileImgUrl,userNickname,userName " +
+                "from User where userNickname like ? or userName like ?)";
+        String getSearchuserNicknameParmas="%"+getSearchUserReq.getUserNickname()+"%";
+        String getSearchuserNameParmas="%"+getSearchUserReq.getUserName()+"%";
+        return this.jdbcTemplate.queryForObject(getSearchUsersCountQuery,int.class,getSearchuserNicknameParmas,getSearchuserNameParmas);
+    }
+
+    public int checkUserStatusbyUserNickname(String userNickname) {
+        String checkUserStatusQuery="select exists(select userEmail from User where userNickname=? and userStatus='FALSE')";
+        String checkUserStatusParams=userNickname;
+
+        return this.jdbcTemplate.queryForObject(checkUserStatusQuery,int.class,checkUserStatusParams);
+    }
 }
