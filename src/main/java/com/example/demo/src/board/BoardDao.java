@@ -222,4 +222,8 @@ public class BoardDao {
         return this.jdbcTemplate.update(deleteCommentQuery,deleteCommentParams);
     }
 
+    public void postBoard(PostBoardReq postBoardReq) {
+        String postBoardQuery="";
+        String postBoardParams
+    }
 }

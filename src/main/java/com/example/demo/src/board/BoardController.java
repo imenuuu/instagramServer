@@ -79,6 +79,19 @@ public class BoardController {
         }
     }
 
+    @ResponseBody
+    @PostMapping("")
+    public BaseResponse<String> postBoard(@RequestBody PostBoardReq postBoardReq){
+        try{
+            int userIdxByJwt = jwtService.getUserIdx();
+
+            boardService.postBoard(postBoardReq);
+            String result="";
+            return new BaseResponse<>(result);
+        }catch (BaseException e){
+            return new BaseResponse<>((e.getStatus()));
+        }
+    }
 
     @ResponseBody
     @PostMapping("/comments/{boardIdx}")

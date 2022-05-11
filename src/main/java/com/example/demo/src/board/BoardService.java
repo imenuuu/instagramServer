@@ -82,4 +82,8 @@ public class BoardService {
 
     }
 
+    public void postBoard(PostBoardReq postBoardReq) throws BaseException {
+        boardDao.postBoard(postBoardReq);
+
+    }
 }
