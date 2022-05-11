@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -81,16 +82,20 @@ public class BoardController {
 
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<String> postBoard(@RequestBody PostBoardReq postBoardReq){
+    public BaseResponse<String> postBoard(@RequestBody Board board){
         try{
             int userIdxByJwt = jwtService.getUserIdx();
-
+            PostBoardReq postBoardReq=new PostBoardReq((long) userIdxByJwt,board.getPositionInfo_id(),
+                    board.getBoardDescription(),board.getBoardImgUrl());
             boardService.postBoard(postBoardReq);
             String result="";
             return new BaseResponse<>(result);
         }catch (BaseException e){
             return new BaseResponse<>((e.getStatus()));
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     @ResponseBody

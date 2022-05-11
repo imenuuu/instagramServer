@@ -222,8 +222,16 @@ public class BoardDao {
         return this.jdbcTemplate.update(deleteCommentQuery,deleteCommentParams);
     }
 
-    public void postBoard(PostBoardReq postBoardReq) {
-        String postBoardQuery="";
-        String postBoardParams
+    public int postBoard(PostBoardReq postBoardReq) {
+        String postBoardQuery= "insert into Board(user_id,positonInfo_id,boardDescription) values(?,?,?);";
+        Object[] postBoardParams=new Object[]{postBoardReq.getUser_id(),postBoardReq.getPositionInfo_id(),postBoardReq.getBoardDescription()};
+        return this.jdbcTemplate.update(postBoardQuery,postBoardParams);
+    }
+    public int postBoardImg(PostBoardReq postBoardReq) {
+        String postBoardImgQuery ="insert into BoardImg(user_id, board_id,boardImgUrl) values(?,last_insert_id(),?);";
+        Object[] postBoardImgParmas=new Object[]{
+                postBoardReq.getUser_id(),postBoardReq.getBoardImgUrl()
+        };
+        return this.jdbcTemplate.update(postBoardImgQuery,postBoardImgParmas);
     }
 }

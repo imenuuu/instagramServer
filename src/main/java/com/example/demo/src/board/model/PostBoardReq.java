@@ -11,6 +11,5 @@ public class PostBoardReq {
     private Long user_id;
     private Long positionInfo_id;
     private String boardDescription;
-    private Long board_id;
     private String boardImgUrl;
 }

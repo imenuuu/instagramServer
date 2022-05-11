@@ -3,14 +3,23 @@ package com.example.demo.src.board;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.board.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import static com.example.demo.config.BaseResponseStatus.*;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static com.example.demo.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.example.demo.config.BaseResponseStatus.MODIFY_FAIL_CREATECOMMENT;
 
 @Service
 public class BoardService {
     private final BoardDao boardDao;
     private final BoardProvider boardProvider;
+    @Autowired
+    DataSource dataSource;
 
     @Autowired
     public BoardService(BoardDao boardDao, BoardProvider boardProvider) {
@@ -82,8 +91,21 @@ public class BoardService {
 
     }
 
-    public void postBoard(PostBoardReq postBoardReq) throws BaseException {
-        boardDao.postBoard(postBoardReq);
+    public void postBoard(PostBoardReq postBoardReq) throws SQLException {
+            TransactionSynchronizationManager.initSynchronization(); // 트랜잭션 동기화 작업 초기화
+            Connection conn= DataSourceUtils.getConnection(dataSource);
+            conn.setAutoCommit(false);
+            try {
+                boardDao.postBoard(postBoardReq);
+                boardDao.postBoardImg(postBoardReq);
+                conn.commit();
+            }catch (SQLException e){
+                conn.rollback();
+            }finally{
+                DataSourceUtils.releaseConnection(conn,dataSource);
+                TransactionSynchronizationManager.unbindResource(this.dataSource);
+                TransactionSynchronizationManager.clearSynchronization();
+            }
 
     }
 }

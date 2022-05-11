@@ -8,8 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Board {
-    private Long boardIdx;
-    private Long user_id;
     private Long positionInfo_id;
     private String boardDescription;
+    private String boardImgUrl;
 }
