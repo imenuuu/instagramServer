@@ -79,6 +79,16 @@ public class BoardController {
             return new BaseResponse<>((e.getStatus()));
         }
     }
+    @ResponseBody
+    @GetMapping("/comments/re-comment/{commentIdx}")
+    public BaseResponse<List<GetBoardRecommentRes>> getBoardRecomment(@PathVariable("commentIdx") Long commentIdx){
+        try {
+            List<GetBoardRecommentRes> getBoardRecommentRes=boardProvider.getBoardRecomment(commentIdx);
+            return new BaseResponse<>(getBoardRecommentRes);
+        } catch (BaseException e) {
+            return new BaseResponse<>((e.getStatus()));
+        }
+    }
 
     @ResponseBody
     @PostMapping("")

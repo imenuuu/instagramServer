@@ -172,6 +172,31 @@ public class BoardDao {
 
 
     }
+    public List<GetBoardRecommentRes> getBoardRecomment(Long commentIdx) {
+        String getBoardRecommentQuery = "select profileImgUrl,userNickname,recomment, " +
+                "case when TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now())>1 then concat(TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now()),'주 전')" +
+                "when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>=24 then '1일 전' " +
+                "when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())>48 " +
+                "then if(TIMESTAMPDIFF(DAY,ReCommentCreated_date,now())>7, date_format(ReCommentCreated_date,'%Y-%m-%d'), " +
+                "concat(TIMESTAMPDIFF(DAY,ReCommentCreated_date,now()),'일 전')) " +
+                "when TIMESTAMPDIFF(hour, ReCommentCreated_date,now())<1 " +
+                "then concat(TIMESTAMPDIFF(minute,ReCommentCreated_date,now()),'분 전')" +
+                "else concat(TIMESTAMPDIFF(hour,ReCommentCreated_date,now()),'시간 전') " +
+                "end as 'reCommentDate' from User " +
+                "join ReComment on user_id=userIdx " +
+                "where comment_id=? order by reCommentCreated_date desc;";
+        Long getBoardRecommentParmas=commentIdx;
+
+        return this.jdbcTemplate.query(getBoardRecommentQuery,
+                (rs,rowNum)->new GetBoardRecommentRes(
+                        rs.getString("profileImgUrl"),
+                        rs.getString("userNickname"),
+                        rs.getString("recomment"),
+                        rs.getString("reCommentDate")
+                ),getBoardRecommentParmas
+                );
+
+    }
 
     public int createComment(PostBoardCommentReq postBoardCommentReq) {
         String createBoardCommentQuery="insert into Comment(board_id ,user_id,comment) values(?,?,?)";
@@ -234,4 +259,6 @@ public class BoardDao {
         };
         return this.jdbcTemplate.update(postBoardImgQuery,postBoardImgParmas);
     }
+
+
 }

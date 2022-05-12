@@ -32,6 +32,8 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_PHONE_NUMBER(false,2030,"휴대폰 번호를 입력해주세요"),
     POST_USERS_INVALID_PHONE_NUMBER(false,2031,"휴대폰형식과 맞지않음"),
 
+    EXISTS_FOLLOW(false,2032,"이미 팔로우 한 유저 입니다."),
+
 
 
     /**

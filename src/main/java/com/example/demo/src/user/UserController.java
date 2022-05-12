@@ -9,6 +9,7 @@ import com.example.demo.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -145,6 +146,22 @@ public class UserController {
         } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+    @ResponseBody
+    @PostMapping({"/follow/{follow_id}"})
+    public BaseResponse<String> createUserFollow(@PathVariable("follow_id")Long follow_id){
+        try {
+            int userIdx=jwtService.getUserIdx();
+            GetUserFollowReq getUserFollowReq = new GetUserFollowReq(follow_id,(long)userIdx);
+            userService.createUserFollow(getUserFollowReq);
+            String result="";
+            return new BaseResponse<>(result);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     /**
      * 로그인 API

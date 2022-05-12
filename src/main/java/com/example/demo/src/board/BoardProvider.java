@@ -3,6 +3,7 @@ package com.example.demo.src.board;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.board.model.GetBoardCommentRes;
 import com.example.demo.src.board.model.GetBoardFollowRes;
+import com.example.demo.src.board.model.GetBoardRecommentRes;
 import com.example.demo.src.board.model.GetBoardRes;
 import org.springframework.stereotype.Service;
 
@@ -63,4 +64,8 @@ public class BoardProvider {
     }
 
 
+    public List<GetBoardRecommentRes> getBoardRecomment(Long commentIdx) throws BaseException{
+        List<GetBoardRecommentRes> getBoardRecommentRes=boardDao.getBoardRecomment(commentIdx);
+        return getBoardRecommentRes;
+    }
 }

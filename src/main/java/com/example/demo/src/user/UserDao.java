@@ -220,4 +220,25 @@ public class UserDao {
 
         return this.jdbcTemplate.queryForObject(checkUserStatusQuery,int.class,checkUserStatusParams);
     }
+
+    public int createUserFollower(GetUserFollowReq getUserFollowReq) {
+        String createUserFollowerQuery="insert into Follower(followerId,user_id) values (?,?)";
+        Object[] createUserFollowerParams=new Object[]{
+                getUserFollowReq.getUser_id(),getUserFollowReq.getFollow_id()
+        };
+        return this.jdbcTemplate.update(createUserFollowerQuery,createUserFollowerParams);
+    }
+
+    public int createUserFollow(GetUserFollowReq getUserFollowReq) {
+        String createUserFollowQuery="insert into Follow(follow_id,user_id) values(?,?)";
+        Object[] createUserFollowParams=new Object[]{
+                getUserFollowReq.getFollow_id(),getUserFollowReq.getUser_id()
+        };
+        return this.jdbcTemplate.update(createUserFollowQuery,createUserFollowParams);
+    }
+    public int getUserFollow(GetUserFollowReq getUserFollowReq){
+        String getUserFollowReqQuery="select exists(select follow_id from Follow where follow_id=? and user_id=? )";
+        Object[] getUserFollowParams=new Object[]{getUserFollowReq.getFollow_id(),getUserFollowReq.getUser_id()};
+        return this.jdbcTemplate.queryForObject(getUserFollowReqQuery,int.class,getUserFollowParams);
+    }
 }

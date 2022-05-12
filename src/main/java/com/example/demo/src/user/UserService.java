@@ -10,10 +10,16 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import javax.sql.DataSource;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -26,6 +32,8 @@ public class UserService {
     private final UserProvider userProvider;
     private final JwtService jwtService;
 
+    @Autowired
+    DataSource dataSource;
 
     @Autowired
     public UserService(UserDao userDao, UserProvider userProvider, JwtService jwtService) {
@@ -60,6 +68,32 @@ public class UserService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+    public void createUserFollow(GetUserFollowReq getUserFollowReq) throws SQLException, BaseException {
+
+        if(userDao.getUserFollow(getUserFollowReq)==0) {
+
+
+            TransactionSynchronizationManager.initSynchronization(); // 트랜잭션 동기화 작업 초기화
+            Connection conn = DataSourceUtils.getConnection(dataSource);
+            conn.setAutoCommit(false);
+            try {
+                userDao.createUserFollow(getUserFollowReq);
+                userDao.createUserFollower(getUserFollowReq);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+            } finally {
+                DataSourceUtils.releaseConnection(conn, dataSource);
+                TransactionSynchronizationManager.unbindResource(this.dataSource);
+                TransactionSynchronizationManager.clearSynchronization();
+            }
+        }
+        else {
+            throw new BaseException(EXISTS_FOLLOW);
+        }
+
+    }
+
 
     public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
         if (userProvider.checkuserNickname(patchUserReq.getUserNickname())==1)
@@ -155,6 +189,7 @@ public class UserService {
 
         return access_Token;
     }
+
 
 
 }
