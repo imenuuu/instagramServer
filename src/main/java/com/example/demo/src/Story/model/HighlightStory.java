@@ -1,4 +1,5 @@
 package com.example.demo.src.Story.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Story {
-    private String storyUrl;
+
+public class HighlightStory {
+    private Long story_id;
+    @Override
+    public String toString() {
+        return "storyHighlight [stroy_id="+story_id+"]";
+    }
 }

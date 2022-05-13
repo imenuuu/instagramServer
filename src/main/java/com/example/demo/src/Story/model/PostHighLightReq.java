@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostStoryReq {
+public class PostHighLightReq {
+    private Long story_id;
+    private Long highlight_id;
     private Long user_id;
-    private String storyUrl;
 }
