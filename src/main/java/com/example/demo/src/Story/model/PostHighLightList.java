@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostHighlightList {
+public class PostHighLightList {
     private Long user_id;
     private String highlightImg;
     private String highlightTitle;

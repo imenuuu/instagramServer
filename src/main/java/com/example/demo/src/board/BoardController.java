@@ -180,7 +180,7 @@ public class BoardController {
 
     @ResponseBody
     @PatchMapping("/comments/{commentIdx}")
-    public BaseResponse<String> deleteComment(@PathVariable("commentIdx") Long commentIdx){
+    public BaseResponse<String> deleteComment(@PathVariable("commentIdx") Long commentIdx) throws SQLException {
         try{
             int userIdx = jwtService.getUserIdx();
             DeleteCommentReq deleteCommentReq = new DeleteCommentReq(commentIdx, (long) userIdx);

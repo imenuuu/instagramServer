@@ -2,7 +2,7 @@ package com.example.demo.src.Story;
 
 import com.example.demo.src.Story.model.GetStorykeepRes;
 import com.example.demo.src.Story.model.PostHighLightReq;
-import com.example.demo.src.Story.model.PostHighlightList;
+import com.example.demo.src.Story.model.PostHighLightList;
 import com.example.demo.src.Story.model.PostStoryReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,7 +40,7 @@ public class StoryDao {
         return this.jdbcTemplate.update(createStoryQuery,createStoryParams);
     }
 
-    public Long createHighlightList(PostHighlightList postHighlightList) {
+    public Long createHighlightList(PostHighLightList postHighlightList) {
         String createHighlightList="insert into StoryHighlightList(user_id,highlightImg,highlightTitle) values(?,?,?)";
         Object[] createHighlightListParams=new Object[]{
                 postHighlightList.getUser_id(),postHighlightList.getHighlightImg(),postHighlightList.getHighlightTitle()

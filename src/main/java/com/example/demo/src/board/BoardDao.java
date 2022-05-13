@@ -102,9 +102,12 @@ public class BoardDao {
                 "                   then concat(TIMESTAMPDIFF(minute,CommentCreated_date,now()),'분 전')\n" +
                 "            else concat(TIMESTAMPDIFF(hour,CommentCreated_date,now()),'시간 전')\n" +
                 "           end as 'commentDate',\n" +
-                "       (select profileimgUrl from User where User.userIdx=ReComment.user_id order by reCommentCreated_date asc limit 1)'recommentprofileImgUrl',\n" +
-                "       (select userNickName from User where User.userIdx=ReComment.user_id order by reCommentCreated_date asc limit 1)'recommentuserNickName',\n" +
-                "       (select ReComment from User where User.userIdx=ReComment.user_id order by reCommentCreated_date asc limit 1)'reComment',\n" +
+                "       (select profileimgUrl from User where User.userIdx=ReComment.user_id and reCommentStatus='TRUE' " +
+                "order by reCommentCreated_date desc limit 1)'recommentprofileImgUrl',\n" +
+                "       (select userNickName from User where User.userIdx=ReComment.user_id and reCommentStatus='TRUE' " +
+                "order by reCommentCreated_date desc limit 1)'recommentuserNickName',\n" +
+                "       (select ReComment from User where User.userIdx=ReComment.user_id and reCommentStatus='TRUE' " +
+                "order by reCommentCreated_date desc limit 1)'reComment',\n" +
                 "       case " +
                 "           when TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now())>1\n" +
                 "                then concat(TIMESTAMPDIFF(WEEK,ReCommentCreated_date,now()),'주 전')\n" +
@@ -115,7 +118,8 @@ public class BoardDao {
                 "            else concat(TIMESTAMPDIFF(hour,ReCommentCreated_date,now()),'시간 전')\n" +
                 "           end as 'reCommentDate'\n" +
                 "from Comment left join Board on Comment.board_id=Board.boardIdx\n" +
-                "             left join ReComment on ReComment.comment_id=Comment.commentIdx join User CommentUser on CommentUser.userIdx =Comment.user_id\n" +
+                "             left join ReComment on ReComment.comment_id=Comment.commentIdx " +
+                "               join User CommentUser on CommentUser.userIdx =Comment.user_id\n" +
                 "where Board.boardIdx=? and commentStatus='TRUE' order by CommentCreated_date desc";
         Long getBoardCommentParams=boardIdx;
 
@@ -184,7 +188,7 @@ public class BoardDao {
                 "else concat(TIMESTAMPDIFF(hour,ReCommentCreated_date,now()),'시간 전') " +
                 "end as 'reCommentDate' from User " +
                 "join ReComment on user_id=userIdx " +
-                "where comment_id=? order by reCommentCreated_date desc;";
+                "where comment_id=? and reCommentStatus='TRUE' order by reCommentCreated_date desc;";
         Long getBoardRecommentParmas=commentIdx;
 
         return this.jdbcTemplate.query(getBoardRecommentQuery,
@@ -246,6 +250,12 @@ public class BoardDao {
 
         return this.jdbcTemplate.update(deleteCommentQuery,deleteCommentParams);
     }
+    public int deleteReComment(DeleteCommentReq deleteCommentReq) {
+        String deleteReCommentQuery="update ReComment set reCommentStatus='FALSE' where comment_id=?";
+        Long deleteReCommentParams=deleteCommentReq.getCommentIdx();
+
+        return this.jdbcTemplate.update(deleteReCommentQuery,deleteReCommentParams);
+    }
 
     public int postBoard(PostBoardReq postBoardReq) {
         String postBoardQuery= "insert into Board(user_id,positonInfo_id,boardDescription) values(?,?,?);";
@@ -259,6 +269,7 @@ public class BoardDao {
         };
         return this.jdbcTemplate.update(postBoardImgQuery,postBoardImgParmas);
     }
+
 
 
 }

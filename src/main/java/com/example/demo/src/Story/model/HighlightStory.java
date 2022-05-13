@@ -12,8 +12,4 @@ import lombok.Setter;
 
 public class HighlightStory {
     private Long story_id;
-    @Override
-    public String toString() {
-        return "storyHighlight [stroy_id="+story_id+"]";
-    }
 }

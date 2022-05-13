@@ -84,9 +84,24 @@ public class BoardService {
         }
     }
 
-    public void deleteComment(DeleteCommentReq deleteCommentReq) throws BaseException{
+    public void deleteComment(DeleteCommentReq deleteCommentReq) throws BaseException, SQLException {
+        TransactionSynchronizationManager.initSynchronization(); // 트랜잭션 동기화 작업 초기화
+        Connection conn= DataSourceUtils.getConnection(dataSource);
+        conn.setAutoCommit(false);
+        try{
+            boardDao.deleteComment(deleteCommentReq);
+            boardDao.deleteReComment(deleteCommentReq);
+            conn.commit();
 
-            int result = boardDao.deleteComment(deleteCommentReq);
+        } catch(SQLException exception){
+            conn.rollback();
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }finally{
+            DataSourceUtils.releaseConnection(conn,dataSource);
+            TransactionSynchronizationManager.unbindResource(this.dataSource);
+            TransactionSynchronizationManager.clearSynchronization();
+        }
 
 
     }

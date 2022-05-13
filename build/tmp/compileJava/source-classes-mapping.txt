@@ -42,10 +42,10 @@ com/example/demo/src/board/model/ReComment.java
  com.example.demo.src.board.model.ReComment
 com/example/demo/src/user/model/User.java
  com.example.demo.src.user.model.User
-com/example/demo/utils/JwtService.java
- com.example.demo.utils.JwtService
-com/example/demo/config/BaseException.java
- com.example.demo.config.BaseException
+com/example/demo/src/Story/model/Story.java
+ com.example.demo.src.Story.model.Story
+com/example/demo/src/message/MessageConfig.java
+ com.example.demo.src.message.MessageConfig
 com/example/demo/src/user/model/GetUserProfileRes.java
  com.example.demo.src.user.model.GetUserProfileRes
 com/example/demo/utils/SHA256.java
@@ -72,8 +72,8 @@ com/example/demo/src/user/model/GetSearchUserRes.java
  com.example.demo.src.user.model.GetSearchUserRes
 com/example/demo/src/board/model/PostBoardCommentRes.java
  com.example.demo.src.board.model.PostBoardCommentRes
-com/example/demo/src/board/BoardDao.java
- com.example.demo.src.board.BoardDao
+com/example/demo/src/Story/model/PostHighLightList.java
+ com.example.demo.src.Story.model.PostHighLightList
 com/example/demo/src/user/model/PatchUserReq.java
  com.example.demo.src.user.model.PatchUserReq
 com/example/demo/src/WebSecurityConfig.java
@@ -92,51 +92,51 @@ com/example/demo/src/user/UserProvider.java
  com.example.demo.src.user.UserProvider
 com/example/demo/src/board/model/GetBoardRecommentRes.java
  com.example.demo.src.board.model.GetBoardRecommentRes
-com/example/demo/src/user/UserController.java
- com.example.demo.src.user.UserController
-com/example/demo/src/user/UserService.java
- com.example.demo.src.user.UserService
+com/example/demo/src/Story/model/PostHighLightStoryIdxReq.java
+ com.example.demo.src.Story.model.PostHighLightStoryIdxReq
+com/example/demo/src/message/model/DmRoom.java
+ com.example.demo.src.message.model.DmRoom
 com/example/demo/src/user/model/GetUserFollowReq.java
  com.example.demo.src.user.model.GetUserFollowReq
-com/example/demo/config/BaseResponseStatus.java
- com.example.demo.config.BaseResponseStatus
+com/example/demo/src/message/MessageService.java
+ com.example.demo.src.message.MessageService
+com/example/demo/src/Story/model/PostHighLightReq.java
+ com.example.demo.src.Story.model.PostHighLightReq
+com/example/demo/src/message/MessageDao.java
+ com.example.demo.src.message.MessageDao
+com/example/demo/config/BaseException.java
+ com.example.demo.config.BaseException
+com/example/demo/src/message/MessageController.java
+ com.example.demo.src.message.MessageController
+com/example/demo/src/message/MessageProvider.java
+ com.example.demo.src.message.MessageProvider
+com/example/demo/src/message/model/DmMessage.java
+ com.example.demo.src.message.model.DmMessage
+com/example/demo/src/Story/model/HighlightStory.java
+ com.example.demo.src.Story.model.HighlightStory
+com/example/demo/utils/JwtService.java
+ com.example.demo.utils.JwtService
+com/example/demo/src/Story/StoryService.java
+ com.example.demo.src.Story.StoryService
+com/example/demo/src/Story/StoryDao.java
+ com.example.demo.src.Story.StoryDao
+com/example/demo/src/user/UserController.java
+ com.example.demo.src.user.UserController
 com/example/demo/config/BaseResponse.java
  com.example.demo.config.BaseResponse
-com/example/demo/src/board/BoardController.java
- com.example.demo.src.board.BoardController
+com/example/demo/src/Story/StoryProvider.java
+ com.example.demo.src.Story.StoryProvider
+com/example/demo/config/BaseResponseStatus.java
+ com.example.demo.config.BaseResponseStatus
+com/example/demo/src/user/UserService.java
+ com.example.demo.src.user.UserService
+com/example/demo/src/Story/StoryController.java
+ com.example.demo.src.Story.StoryController
 com/example/demo/src/board/BoardProvider.java
  com.example.demo.src.board.BoardProvider
 com/example/demo/src/board/BoardService.java
  com.example.demo.src.board.BoardService
-com/example/demo/src/message/MessageProvider.java
- com.example.demo.src.message.MessageProvider
-com/example/demo/src/Story/model/HighlightStory.java
- com.example.demo.src.Story.model.HighlightStory
-com/example/demo/src/Story/model/PostHighlightList.java
- com.example.demo.src.Story.model.PostHighlightList
-com/example/demo/src/message/model/DmMessage.java
- com.example.demo.src.message.model.DmMessage
-com/example/demo/src/Story/model/Story.java
- com.example.demo.src.Story.model.Story
-com/example/demo/src/message/MessageConfig.java
- com.example.demo.src.message.MessageConfig
-com/example/demo/src/message/MessageService.java
- com.example.demo.src.message.MessageService
-com/example/demo/src/message/model/DmRoom.java
- com.example.demo.src.message.model.DmRoom
-com/example/demo/src/message/MessageController.java
- com.example.demo.src.message.MessageController
-com/example/demo/src/message/MessageDao.java
- com.example.demo.src.message.MessageDao
-com/example/demo/src/Story/model/PostHighLightReq.java
- com.example.demo.src.Story.model.PostHighLightReq
-com/example/demo/src/Story/model/PostHighLightStoryIdxReq.java
- com.example.demo.src.Story.model.PostHighLightStoryIdxReq
-com/example/demo/src/Story/StoryService.java
- com.example.demo.src.Story.StoryService
-com/example/demo/src/Story/StoryProvider.java
- com.example.demo.src.Story.StoryProvider
-com/example/demo/src/Story/StoryDao.java
- com.example.demo.src.Story.StoryDao
-com/example/demo/src/Story/StoryController.java
- com.example.demo.src.Story.StoryController
+com/example/demo/src/board/BoardDao.java
+ com.example.demo.src.board.BoardDao
+com/example/demo/src/board/BoardController.java
+ com.example.demo.src.board.BoardController
