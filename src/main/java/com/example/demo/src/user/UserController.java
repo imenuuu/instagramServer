@@ -250,6 +250,7 @@ public class UserController {
     @GetMapping("/oauth")
     public void home(@RequestParam String code)throws Exception{
         System.out.println(code);
+        userService.getKaKaoAccessToken(code);
 
     }
 

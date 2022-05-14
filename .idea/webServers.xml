@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="c060f0b2-9401-4c87-88f8-5d81329071a4" name="instagramSpring" url="http://austinserver.shop">
-        <fileTransfer rootFolder="/var/www/instagramSpring" accessType="SFTP" host="3.34.212.80" port="22" sshConfigId="109b3030-41ef-4d21-b0d0-35a9fe9eaf4a" sshConfig="ubuntu@3.34.212.80:22 key" keyPair="true">
+        <fileTransfer rootFolder="/var/www/instagramServer" accessType="SFTP" host="3.34.212.80" port="22" sshConfigId="109b3030-41ef-4d21-b0d0-35a9fe9eaf4a" sshConfig="ubuntu@3.34.212.80:22 key" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

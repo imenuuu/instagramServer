@@ -41,9 +41,9 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa') //mysql 5버전의 경우 삭제.
 
     //websocket
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-    implementation 'org.webjars:sockjs-client:1.1.2'
-    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+    implementation ('org.springframework.boot:spring-boot-starter-websocket')
+    implementation ('org.webjars:sockjs-client:1.1.2')
+    implementation ('org.webjars:stomp-websocket:2.3.3-1')
 
     // Web
     implementation ('org.springframework.boot:spring-boot-starter-web')
@@ -56,7 +56,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-web')
 
-    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation ('com.google.code.gson:gson:2.8.7')
 
 
 
