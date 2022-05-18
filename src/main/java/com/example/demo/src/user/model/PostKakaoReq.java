@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostLoginRes {
-    private Long userIdx;
-    private String jwt;
-    private String refreshToken;
+public class PostKakaoReq {
+    private String userPhonenumber;
+    private String userNickname;
+    private Date userBirth;
 }

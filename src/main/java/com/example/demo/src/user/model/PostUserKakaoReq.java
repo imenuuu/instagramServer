@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostLoginRes {
-    private Long userIdx;
-    private String jwt;
-    private String refreshToken;
+public class PostUserKakaoReq {
+    private String k_name;
+    private Long k_id;
+    private String k_email;
+
 }

@@ -1,18 +1,19 @@
 package com.example.demo.src.user;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.user.model.*;
 import com.example.demo.utils.JwtService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
-
 
 import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.isRegexEmail;
@@ -154,7 +155,7 @@ public class UserController {
             int userIdx=jwtService.getUserIdx();
             GetUserFollowReq getUserFollowReq = new GetUserFollowReq(follow_id,(long)userIdx);
             userService.createUserFollow(getUserFollowReq);
-            String result="";
+            String result="팔로우 성공";
             return new BaseResponse<>(result);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
@@ -176,14 +177,94 @@ public class UserController {
         try{
             // TODO: 로그인 값들에 대한 형식적인 validatin 처리해주셔야합니다!
             // TODO: 유저의 status ex) 비활성화된 유저, 탈퇴한 유저 등을 관리해주고 있다면 해당 부분에 대한 validation 처리도 해주셔야합니다.
-
             PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
+            userService.logInRefreshToken(postLoginRes.getUserIdx(),postLoginRes.getRefreshToken());
             return new BaseResponse<>(postLoginRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
+    //로그아웃
+    @ResponseBody
+    @PatchMapping("/logOut/{userIdx}")
+    public BaseResponse<String> logOut(@PathVariable("userIdx")Long userIdx){
+        try {
+            int userIdxByJwt=jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            userService.logOut(userIdx);
+            String result="redirect:/ logIn";
+            return new BaseResponse<>(result);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    /**
+     * 카카오 로그인 API
+     * [POST] /users/oauth/code?=
+     * @return BaseResponse<PostUserKakaoRes>
+     */
+    @ResponseBody
+    @GetMapping("/oauth")
+    public BaseResponse<PostLoginRes> KakaoLogIn(HttpServletResponse response, @RequestParam String code) {
+
+        try {
+            String access_Token = userService.getKaKaoAccessToken(code);
+            PostUserKakaoReq postUserKakaoReq = userService.getKakaoUser(access_Token);
+            String result = "";
+            String redirect_uri = "userInfo?accessToken="+access_Token;
+
+            //카카오 DB 저장 후 postUserKakaoReq 연동
+            //만약 유저 정보가 없으면 카카오 db 저장 후 추가 정보 입력 페이지로 리다이렉트한다.
+            if (userProvider.getKakaoLogin(postUserKakaoReq.getK_email()) == 0)
+            {
+                userService.createOauthUser(postUserKakaoReq);
+                response.sendRedirect(redirect_uri);
+            }
+            //만약 유저 정보가 User 테이블에 있으면 로그인 후 jwt access_Token 발급
+            PostLoginRes postLoginRes = null;
+            if (userProvider.checkEmail(postUserKakaoReq.getK_email()) == 1) {
+                postLoginRes=userProvider.logInKakao(postUserKakaoReq.getK_email());
+
+            }
+            return new BaseResponse<>(postLoginRes);
+        }catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**카카오 회원가입 추가 정보 입력
+    *성공
+     */
+    @ResponseBody
+    @PostMapping("/userInfo")
+    public BaseResponse<PostUserKakaoRes> PostKakaoUser(@RequestParam String accessToken,@RequestBody PostOauthUserReq postOauthUserReq){
+        try {
+            PostUserKakaoReq postUserKakaoReq=userService.getKakaoUser(accessToken);
+
+            PostOauthAddInfoReq postOauthAddInfoReq = new PostOauthAddInfoReq(postUserKakaoReq.getK_name(),postOauthUserReq.getUserPhonenumber(),
+                    postUserKakaoReq.getK_email(),postOauthUserReq.getUserNickname(),postOauthUserReq.getUserBirth());
+            PostUserKakaoRes postUserKakaoRes=userService.createKakaoUser(postOauthAddInfoReq);
+            return new BaseResponse<>(postUserKakaoRes);
+        }
+        catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PostMapping("/userRequestToken")
+    public BaseResponse<PostUserRes> PostRequestToken(@RequestBody PostTokenReq postTokenReq){
+
+
+        return null;
+    }
     /**
      * 유저이름변경 API
      * [PATCH] /users/:userIdx
@@ -246,13 +327,9 @@ public class UserController {
 
         }
     }
-    @ResponseBody
-    @GetMapping("/oauth")
-    public void home(@RequestParam String code)throws Exception{
-        System.out.println(code);
-        userService.getKaKaoAccessToken(code);
 
-    }
+
+
 
 
 

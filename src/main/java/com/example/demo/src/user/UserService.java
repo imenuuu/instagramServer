@@ -42,6 +42,19 @@ public class UserService {
         this.jwtService = jwtService;
 
     }
+    public PostUserKakaoRes createKakaoUser(PostOauthAddInfoReq postOauthAddInfoReq) throws BaseException{
+        if(userProvider.checkEmail(postOauthAddInfoReq.getUserEmail())==1){
+            throw new BaseException(DUPLICATED_EMAIL);
+        }
+            Long userIdx=userDao.createUserOauth(postOauthAddInfoReq);
+            String jwt = jwtService.createJwt(userIdx);
+            String refreshToken = jwtService.createRefreshToken(userIdx);
+            userDao.postUserAccessToken(userIdx, refreshToken);
+            return new PostUserKakaoRes(userIdx,jwt,refreshToken);
+
+
+
+    }
 
     //POST
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
@@ -63,10 +76,16 @@ public class UserService {
             Long userIdx = userDao.createUser(postUserReq);
             //jwt 발급.
             String jwt = jwtService.createJwt(userIdx);
-            return new PostUserRes(jwt,userIdx);
+            String refreshToken = jwtService.createRefreshToken(userIdx);
+            userDao.postUserAccessToken(userIdx, refreshToken);
+            return new PostUserRes(userIdx,jwt,refreshToken);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+    public int createOauthUser(PostUserKakaoReq postUserKakaoReq) {
+        return userDao.postUserKakao(postUserKakaoReq);
+
     }
     public void createUserFollow(GetUserFollowReq getUserFollowReq) throws SQLException, BaseException {
 
@@ -96,6 +115,9 @@ public class UserService {
 
 
     public void modifyUserName(PatchUserReq patchUserReq) throws BaseException {
+        if(userDao.checklogOut(patchUserReq.getUserIdx())==0) {
+            throw new BaseException(LOGOUT);
+        }
         if (userProvider.checkuserNickname(patchUserReq.getUserNickname())==1)
         {
             throw new BaseException(USERS_EXISTS_NICKNAME);
@@ -112,6 +134,7 @@ public class UserService {
     }
     public void modifyUserStatus(PatchUserStatusReq patchUserStatusReq) throws BaseException {
         try{
+
             int result=userDao.modifyUserStatus(patchUserStatusReq);
             if(result==0){
                 throw new BaseException(MODIFY_FAIL_USERSTATUS);
@@ -188,6 +211,69 @@ public class UserService {
         }
 
         return access_Token;
+    }
+
+
+    public PostUserKakaoReq getKakaoUser(String token) throws BaseException {
+
+
+        String reqURL = "https://kapi.kakao.com/v2/user/me";
+
+        //access_token을 이용하여 사용자 정보 조회
+        try {
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Authorization", "Bearer " + token); //전송할 header 작성, access_token전송
+
+            //결과 코드가 200이라면 성공
+            int responseCode = conn.getResponseCode();
+            System.out.println("responseCode : " + responseCode);
+
+            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            System.out.println("response body : " + result);
+
+            //Gson 라이브러리로 JSON파싱
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+            int id = element.getAsJsonObject().get("id").getAsInt();
+            String nickname=element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
+            boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
+            String email = "";
+            if(hasEmail){
+                email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+            }
+
+            PostUserKakaoReq postUserKakaoReq = new PostUserKakaoReq(nickname, (long) id,email);
+            System.out.println("nickname : " + nickname);
+            System.out.println("id : " + id);
+            System.out.println("email : " + email);
+
+            br.close();
+            return postUserKakaoReq;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public void logInRefreshToken(Long userIdx, String jwt) {
+        userDao.postUserAccessToken(userIdx,jwt);
+    }
+
+    public void logOut(Long userIdx) {
+        userDao.logOut(userIdx);
     }
 
 

@@ -41,6 +41,7 @@ public class UserProvider {
         }
     }
 
+
     public List<GetUserRes> getUsersByEmail(String email) throws BaseException{
         try{
             List<GetUserRes> getUsersRes = userDao.getUsersByEmail(email);
@@ -91,6 +92,9 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+    public int getKakaoLogin(String email) {
+        return userDao.getUserKakaoExists(email);
+    }
 
     public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException{
         User user = userDao.getPwd(postLoginReq);
@@ -115,11 +119,26 @@ public class UserProvider {
         if(user.getUserPassword().equals(encryptPwd)){
             Long userIdx = user.getUserIdx();
             String jwt = jwtService.createJwt(userIdx);
-            return new PostLoginRes(userIdx,jwt);
+            String refreshToken = jwtService.createRefreshToken(userIdx);
+            return new PostLoginRes(userIdx,jwt,refreshToken);
         }
         else{
             throw new BaseException(FAILED_TO_LOGIN);
         }
+
+    }
+    public PostLoginRes logInKakao(String k_email) throws BaseException{
+
+            if (userDao.checkEmail(k_email) == 1) {
+                Long userIdx = userDao.getUserIdxByEmail(k_email);
+                String jwt = jwtService.createJwt(userIdx);
+                String refreshToken = jwtService.createRefreshToken(userIdx);
+                userDao.postUserAccessToken(userIdx, refreshToken);
+                return new PostLoginRes(userIdx, jwt, refreshToken);
+            }
+            else{
+                throw new BaseException(FAILED_TO_LOGIN);
+            }
 
     }
 
@@ -172,4 +191,8 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+
+
+
 }

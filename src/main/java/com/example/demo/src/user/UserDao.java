@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public class UserDao {
-
+    
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -76,6 +76,17 @@ public class UserDao {
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery,Long.class);
+    }
+    public Long createUserOauth(PostOauthAddInfoReq postOauthAddInfoReq) {
+        String createUserQuery = "insert into User (userName, userPhonenumber, userEmail,userNickname,userBirth) values (?,?,?,?,?)";
+        Object[] createUserParams = new Object[]{
+            postOauthAddInfoReq.getUserName(),postOauthAddInfoReq.getUserPhonenumber(),postOauthAddInfoReq.getUserEmail(),
+                postOauthAddInfoReq.getUserNickname(),postOauthAddInfoReq.getUserBirth()
+        };
+        this.jdbcTemplate.update(createUserQuery,createUserParams);
+
+        String lastInsertIdQuery="select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery,Long.class);
     }
 
@@ -178,6 +189,7 @@ public class UserDao {
     }
 
 
+
     public int modifyUserStatus(PatchUserStatusReq patchUserStatusReq) {
         String patchUserStatusQuery="update User set userStatus='FALSE' where userIdx=?";
         Object[] patchUserStausParams=new Object[]{
@@ -240,5 +252,48 @@ public class UserDao {
         String getUserFollowReqQuery="select exists(select follow_id from Follow where follow_id=? and user_id=? )";
         Object[] getUserFollowParams=new Object[]{getUserFollowReq.getFollow_id(),getUserFollowReq.getUser_id()};
         return this.jdbcTemplate.queryForObject(getUserFollowReqQuery,int.class,getUserFollowParams);
+    }
+
+    public int postUserKakao(PostUserKakaoReq postUserKakaoReq) {
+        String postUserKakaoQuery="insert into Kakao(k_name,k_id,k_email) values(?,?,?)";
+        Object[] postUserKakaoParams=new Object[]{
+                postUserKakaoReq.getK_name(),postUserKakaoReq.getK_id(),postUserKakaoReq.getK_email()
+        };
+
+        return this.jdbcTemplate.update(postUserKakaoQuery,postUserKakaoParams);
+    }
+
+    public int getUserKakaoExists(String email) {
+        String getUserKakaoexistsQuery="select exists(select k_id from Kakao where k_email=?)";
+        String getUserKakaoexistsParams=email;
+        return this.jdbcTemplate.queryForObject(getUserKakaoexistsQuery,int.class,getUserKakaoexistsParams);
+    }
+    public Long getUserIdxByEmail(String email){
+        String getUserIdxByEmailQuery="select userIdx from User where userEmail=?";
+        String getUserIdxByEmailParams=email;
+        return this.jdbcTemplate.queryForObject(getUserIdxByEmailQuery,Long.class,getUserIdxByEmailParams);
+    }
+
+
+
+    public int postUserAccessToken(Long userIdx, String refreshToken) {
+        String postUserAccessToken="update User set refreshToken=? where userIdx=?";
+        Object[] postUserAccessTokenParams=new Object[]{
+                refreshToken,userIdx
+        };
+        return this.jdbcTemplate.update(postUserAccessToken,postUserAccessTokenParams);
+    }
+
+    public int logOut(Long userIdx) {
+        String logOutUserQuery="update User set refreshToken=null where userIdx=?";
+        Long logOutUserParams=userIdx;
+        return this.jdbcTemplate.update(logOutUserQuery,logOutUserParams);
+    }
+
+
+    public int checklogOut(Long userIdx) {
+        String checklogOutQuery="select exists(select userIdx from User where refreshToken=null and userIdx=?)";
+        Long checklogOutParams=userIdx;
+        return this.jdbcTemplate.queryForObject(checklogOutQuery,int.class,checklogOutParams);
     }
 }

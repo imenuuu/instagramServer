@@ -7,8 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostLoginRes {
+public class PatchUserLogoutReq {
     private Long userIdx;
-    private String jwt;
-    private String refreshToken;
 }
